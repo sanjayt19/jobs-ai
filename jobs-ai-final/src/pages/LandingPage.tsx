@@ -1,7 +1,20 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { Sparkles, FileText, Target, TrendingUp } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 export default function LandingPage() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // If a user session exists (for example after OAuth redirect), send them to the dashboard
+    supabase.auth.getSession().then((res: any) => {
+      const session = (res && res.data && res.data.session) || null;
+      if (session) {
+        navigate('/dashboard');
+      }
+    });
+  }, [navigate]);
   return (
     <div className="min-h-screen bg-slate-900">
       <header className="border-b border-slate-800">

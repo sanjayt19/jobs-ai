@@ -1,0 +1,4 @@
+# Ignore built assets and dependencies for the frontend project
+/jobs-ai-final/node_modules/
+/jobs-ai-final/dist/
+/jobs-ai-final/.env
