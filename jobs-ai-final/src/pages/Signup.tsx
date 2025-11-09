@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import OAuthButton from '../components/OAuthButton';
 import { Sparkles } from 'lucide-react';
 
 export default function Signup() {
@@ -61,6 +62,14 @@ export default function Signup() {
         </div>
 
         <div className="bg-slate-800 p-8 rounded-xl">
+          <div className="mb-4">
+            <OAuthButton />
+          </div>
+          <div className="flex items-center gap-3 my-3">
+            <div className="flex-1 h-[1px] bg-slate-700" />
+            <div className="text-sm text-slate-400">or</div>
+            <div className="flex-1 h-[1px] bg-slate-700" />
+          </div>
           <form onSubmit={handleSignup} className="space-y-6">
             {error && (
               <div className="bg-red-500/10 border border-red-500 text-red-500 px-4 py-3 rounded">
