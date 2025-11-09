@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { openai } from '../lib/openai';
-import { Upload, Loader } from 'lucide-react';
+import { openai, isOpenAIConfigured } from '../lib/openai';
+import { Upload, Loader, AlertCircle } from 'lucide-react';
 
 export default function ResumeAnalyzer() {
   const [file, setFile] = useState<File | null>(null);
@@ -17,11 +17,16 @@ export default function ResumeAnalyzer() {
   const analyzeResume = async () => {
     if (!file) return;
 
+    if (!isOpenAIConfigured()) {
+      setAnalysis('OpenAI API key not configured. Please add VITE_OPENAI_API_KEY to your .env file to use AI features.');
+      return;
+    }
+
     setLoading(true);
     try {
       const text = await file.text();
 
-      const completion = await openai.chat.completions.create({
+      const completion = await openai!.chat.completions.create({
         model: 'gpt-4o-mini',
         messages: [
           {
@@ -61,6 +66,19 @@ export default function ResumeAnalyzer() {
   return (
     <div>
       <h1 className="text-3xl font-bold text-white mb-8">Resume Analyzer</h1>
+
+      {!isOpenAIConfigured() && (
+        <div className="bg-yellow-500/10 border border-yellow-500 text-yellow-500 px-4 py-3 rounded mb-6 flex items-start">
+          <AlertCircle className="w-5 h-5 mr-2 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="font-semibold">OpenAI API Key Required</p>
+            <p className="text-sm mt-1">
+              To use AI-powered resume analysis, add your OpenAI API key to the .env file. 
+              See README.md for setup instructions.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="bg-slate-800 p-8 rounded-xl mb-6">
         <div className="border-2 border-dashed border-slate-600 rounded-lg p-12 text-center">
