@@ -29,7 +29,7 @@ export default function LandingPage() {
             </Link>
             <Link
               to="/signup"
-              className="bg-primary text-slate-900 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-500"
+              className="bg-primary text-white px-6 py-2 rounded-lg font-semibold hover:bg-primary-600"
             >
               Get Started
             </Link>
@@ -47,7 +47,7 @@ export default function LandingPage() {
         <p className="mt-6 text-lg leading-8 text-slate-600">AI tools for job seekers — generate tailored resumes, smart cover letters, and manage applications. Visit <a href="https://www.shvii.ai" className="text-indigo-600 hover:underline">www.shvii.ai</a>.</p>
         <Link
           to="/signup"
-          className="inline-block bg-primary text-slate-900 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-yellow-500"
+          className="inline-block bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary-600"
         >
           Start Free Trial
         </Link>

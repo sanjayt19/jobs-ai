@@ -4,6 +4,7 @@ import { openai } from '../lib/openai';
 import { Loader, Copy, Check } from 'lucide-react';
 
 export default function CoverLetterGenerator() {
+  const openaiAvailable = Boolean(openai);
   const [jobTitle, setJobTitle] = useState('');
   const [company, setCompany] = useState('');
   const [jobDescription, setJobDescription] = useState('');
@@ -12,6 +13,10 @@ export default function CoverLetterGenerator() {
   const [copied, setCopied] = useState(false);
 
   const generateCoverLetter = async () => {
+    if (!openaiAvailable) {
+      setCoverLetter('OpenAI API key not configured — AI features are disabled in this environment.');
+      return;
+    }
     if (!jobTitle || !company || !jobDescription) return;
 
     setLoading(true);
@@ -106,8 +111,8 @@ export default function CoverLetterGenerator() {
 
           <button
             onClick={generateCoverLetter}
-            disabled={loading || !jobTitle || !company || !jobDescription}
-            className="w-full bg-primary text-slate-900 py-3 rounded-lg font-semibold hover:bg-yellow-500 disabled:opacity-50 flex items-center justify-center"
+            disabled={loading || !jobTitle || !company || !jobDescription || !openaiAvailable}
+            className="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-primary-600 disabled:opacity-50 flex items-center justify-center"
           >
             {loading ? (
               <>
@@ -120,6 +125,11 @@ export default function CoverLetterGenerator() {
           </button>
         </div>
       </div>
+      {!openaiAvailable && (
+        <div className="mt-4 p-3 rounded bg-yellow-50 text-yellow-800 border border-yellow-200">
+          <strong>AI disabled:</strong> OpenAI API key not configured. Generate features will be unavailable until a key is set in the environment.
+        </div>
+      )}
 
       {coverLetter && (
         <div className="bg-slate-800 p-8 rounded-xl">
