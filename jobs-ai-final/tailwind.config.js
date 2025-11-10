@@ -7,7 +7,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#EAB308',
+        primary: {
+          DEFAULT: '#4F46E5',
+          600: '#4338CA'
+        },
+        muted: '#6B7280',
+        subtle: '#F8FAFC',
+        accent: '#FFB86B'
       },
     },
   },

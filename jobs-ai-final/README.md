@@ -1,6 +1,6 @@
-# Jobs.AI (frontend)
+# Shvii (frontend)
 
-This folder contains the Vite + React frontend for Jobs.AI.
+This folder contains the Vite + React frontend for Shvii.
 
 Local dev
 

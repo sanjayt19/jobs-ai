@@ -15,16 +15,16 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900">
-      <header className="border-b border-slate-800">
+    <div className="min-h-screen bg-white text-slate-900">
+      <header className="border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <Sparkles className="w-8 h-8 text-primary" />
-            <span className="text-2xl font-bold text-white">Jobs.AI</span>
+            <span className="text-2xl font-bold">Shvii</span>
           </div>
           <button
             onClick={handleLogout}
-            className="flex items-center space-x-2 text-slate-300 hover:text-white"
+            className="flex items-center space-x-2 text-slate-600 hover:text-slate-900"
           >
             <LogOut className="w-5 h-5" />
             <span>Logout</span>
@@ -33,32 +33,32 @@ export default function Dashboard() {
       </header>
 
       <div className="flex">
-        <aside className="w-64 border-r border-slate-800 min-h-screen p-6">
+        <aside className="w-64 border-r border-gray-100 min-h-screen p-6">
           <nav className="space-y-2">
             <Link
               to="/dashboard"
-              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white"
+              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-gray-50 hover:text-slate-900"
             >
               <Home className="w-5 h-5" />
               <span>Dashboard</span>
             </Link>
             <Link
               to="/dashboard/resume"
-              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white"
+              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-gray-50 hover:text-slate-900"
             >
               <FileText className="w-5 h-5" />
               <span>Resume Analyzer</span>
             </Link>
             <Link
               to="/dashboard/cover-letter"
-              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white"
+              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-gray-50 hover:text-slate-900"
             >
               <FileText className="w-5 h-5" />
               <span>Cover Letters</span>
             </Link>
             <Link
               to="/dashboard/applications"
-              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white"
+              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-gray-50 hover:text-slate-900"
             >
               <Briefcase className="w-5 h-5" />
               <span>Applications</span>
