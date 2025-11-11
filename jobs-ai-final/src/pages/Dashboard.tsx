@@ -1,10 +1,11 @@
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { Sparkles, FileText, Briefcase, LogOut, Home } from 'lucide-react';
+import { Sparkles, FileText, Briefcase, LogOut, Home, User } from 'lucide-react';
 import ResumeAnalyzer from '../components/ResumeAnalyzer';
 import CoverLetterGenerator from '../components/CoverLetterGenerator';
 import ApplicationTracker from '../components/ApplicationTracker';
 import DashboardHome from '../components/DashboardHome';
+import Profile from '../components/Profile';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -41,13 +42,21 @@ export default function Dashboard() {
             >
               <Home className="w-5 h-5" />
               <span>Dashboard</span>
+            <Link
+              to="/dashboard/applications"
+              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-
+gray-50 hover:text-slate-900"                                                                                 >
+              <Briefcase className="w-5 h-5" />
+              <span>Applications</span>
             </Link>
             <Link
-              to="/dashboard/resume"
-              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-gray-50 hover:text-slate-900"
+              to="/dashboard/profile"
+              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-
+gray-50 hover:text-slate-900"
             >
-              <FileText className="w-5 h-5" />
-              <span>Resume Analyzer</span>
+              <User className="w-5 h-5" />
+              <span>Profile</span>
+            </Link>
             </Link>
             <Link
               to="/dashboard/cover-letter"
@@ -72,6 +81,7 @@ export default function Dashboard() {
             <Route path="/resume" element={<ResumeAnalyzer />} />
             <Route path="/cover-letter" element={<CoverLetterGenerator />} />
             <Route path="/applications" element={<ApplicationTracker />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </main>
       </div>
