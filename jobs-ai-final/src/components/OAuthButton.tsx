@@ -29,7 +29,7 @@ export default function OAuthButton({ provider = 'google', className = '' }: OAu
     <button
       type="button"
       onClick={handleOAuth}
-      className={`w-full flex items-center justify-center gap-3 px-4 py-2 rounded-lg border border-slate-600 bg-white/5 hover:bg-white/10 text-white font-semibold ${className}`}
+      className={`w-full flex items-center justify-center gap-3 px-4 py-2 rounded-lg border border-slate-600 bg-white/5 hover:bg-white/10 text-slate-900 dark:text-white font-semibold ${className}`}
     >
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-5 h-5">
         <path fill="#fbc02d" d="M43.6 20.5H42V20H24v8h11.3C34.3 33.6 29.5 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.3 0 6.3 1.2 8.6 3.2l6.2-6.2C33.7 4.6 29 3 24 3 12.8 3 4 11.8 4 23s8.8 20 20 20c11.1 0 20-8 20-20 0-1.3-.1-2.6-.4-3.9z"/>
@@ -37,7 +37,7 @@ export default function OAuthButton({ provider = 'google', className = '' }: OAu
         <path fill="#4caf50" d="M24 45c5 0 9.6-1.6 13.5-4.4l-6.4-5.3C29.9 35.8 27.1 37 24 37c-5.5 0-10.3-3.4-12-8.3L5.3 33.6C8.3 39.9 15.3 45 24 45z"/>
         <path fill="#1565c0" d="M43.6 20.5H42V20H24v8h11.3c-1.2 3.5-3.6 6.4-6.6 8.3l.1-.1 6.1 5.1C39.9 39 44 32 44 24c0-1.3-.1-2.6-.4-3.9z"/>
       </svg>
-      Continue with Google
+      Login with Google
     </button>
   );
 }
