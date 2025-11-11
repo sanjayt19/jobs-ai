@@ -1,6 +1,4 @@
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
-import { Routes, Route, Link, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Sparkles, FileText, Briefcase, LogOut, Home, User } from 'lucide-react';
 import ResumeAnalyzer from '../components/ResumeAnalyzer';
@@ -11,11 +9,6 @@ import Profile from '../components/Profile';
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [user, setUser] = useState<any | null>(null);
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => setUser(user));
-  }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -30,54 +23,54 @@ export default function Dashboard() {
             <Sparkles className="w-8 h-8 text-primary" />
             <span className="text-2xl font-bold">Shvii</span>
           </div>
-
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={() => navigate('/dashboard/profile')}
-              className="flex items-center space-x-2 text-slate-700 hover:text-primary"
-              aria-label="Open profile"
-            >
-              <User className="w-5 h-5" />
-              <span className="hidden sm:inline text-sm">{user?.email ?? 'Profile'}</span>
-            </button>
-
-            <button
-              onClick={handleLogout}
-              className="flex items-center space-x-2 text-slate-600 hover:text-slate-900"
-            >
-              <LogOut className="w-5 h-5" />
-              <span>Logout</span>
-            </button>
-          </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center space-x-2 text-slate-600 hover:text-slate-900"
+          >
+            <LogOut className="w-5 h-5" />
+            <span>Logout</span>
+          </button>
         </div>
       </header>
 
       <div className="flex">
         <aside className="w-64 border-r border-gray-100 min-h-screen p-6">
           <nav className="space-y-2">
-            <Link to="/dashboard" className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-gray-50 hover:text-slate-900">
+            <Link
+              to="/dashboard"
+              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-gray-50 hover:text-slate-900"
+            >
               <Home className="w-5 h-5" />
               <span>Dashboard</span>
-            </Link>
-
-            <Link to="/dashboard/resume" className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-gray-50 hover:text-slate-900">
-              <FileText className="w-5 h-5" />
-              <span>Resume Analyzer</span>
-            </Link>
-
-            <Link to="/dashboard/cover-letter" className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-gray-50 hover:text-slate-900">
-              <FileText className="w-5 h-5" />
-              <span>Cover Letters</span>
-            </Link>
-
-            <Link to="/dashboard/applications" className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-gray-50 hover:text-slate-900">
+            <Link
+              to="/dashboard/applications"
+              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-
+gray-50 hover:text-slate-900"                                                                                 >
               <Briefcase className="w-5 h-5" />
               <span>Applications</span>
             </Link>
-
-            <Link to="/dashboard/profile" className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-gray-50 hover:text-slate-900">
+            <Link
+              to="/dashboard/profile"
+              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-
+gray-50 hover:text-slate-900"
+            >
               <User className="w-5 h-5" />
               <span>Profile</span>
+            </Link>
+            </Link>
+            <Link
+              to="/dashboard/cover-letter"
+              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-gray-50 hover:text-slate-900"
+            >
+              <FileText className="w-5 h-5" />
+              <span>Cover Letters</span>
+            </Link>
+            <Link
+              to="/dashboard/applications"
+              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-gray-50 hover:text-slate-900"
+            >
+              <Briefcase className="w-5 h-5" />
+              <span>Applications</span>
             </Link>
           </nav>
         </aside>
