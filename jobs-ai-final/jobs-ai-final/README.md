@@ -1,6 +1,6 @@
 # Shvii (frontend)
 
-This folder contains the Vite + React frontend for Shvii.
+This folder contains the Vite + React frontend for Shvii (www.shvii.ai).
 
 Local dev
 

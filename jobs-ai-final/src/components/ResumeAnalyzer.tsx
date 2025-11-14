@@ -4,6 +4,7 @@ import { openai } from '../lib/openai';
 import { Upload, Loader } from 'lucide-react';
 
 export default function ResumeAnalyzer() {
+  const openaiAvailable = Boolean(openai);
   const [file, setFile] = useState<File | null>(null);
   const [analysis, setAnalysis] = useState('');
   const [loading, setLoading] = useState(false);
@@ -15,6 +16,10 @@ export default function ResumeAnalyzer() {
   };
 
   const analyzeResume = async () => {
+    if (!openaiAvailable) {
+      setAnalysis('OpenAI API key not configured — AI features are disabled in this environment.');
+      return;
+    }
     if (!file) return;
 
     setLoading(true);
@@ -75,7 +80,7 @@ export default function ResumeAnalyzer() {
           />
           <label
             htmlFor="resume-upload"
-            className="inline-block bg-primary text-slate-900 px-6 py-2 rounded-lg font-semibold cursor-pointer hover:bg-yellow-500"
+            className="inline-block bg-primary text-white px-6 py-2 rounded-lg font-semibold cursor-pointer hover:bg-primary-600"
           >
             Choose File
           </label>
@@ -84,9 +89,9 @@ export default function ResumeAnalyzer() {
 
         {file && (
           <button
-            onClick={analyzeResume}
-            disabled={loading}
-            className="w-full mt-6 bg-primary text-slate-900 py-3 rounded-lg font-semibold hover:bg-yellow-500 disabled:opacity-50 flex items-center justify-center"
+              onClick={analyzeResume}
+              disabled={loading || !openaiAvailable}
+            className="w-full mt-6 bg-primary text-white py-3 rounded-lg font-semibold hover:bg-primary-600 disabled:opacity-50 flex items-center justify-center"
           >
             {loading ? (
               <>

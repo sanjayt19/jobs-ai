@@ -16,15 +16,15 @@ export default function LandingPage() {
     });
   }, [navigate]);
   return (
-    <div className="min-h-screen bg-white text-slate-900">
-      <header className="border-b border-gray-100">
+    <div className="min-h-screen bg-white">
+      <header className="border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <Sparkles className="w-8 h-8 text-primary" />
-            <span className="text-2xl font-bold">Shvii</span>
+            <span className="text-2xl font-bold text-slate-900">Shvii</span>
           </div>
           <div className="space-x-4">
-            <Link to="/login" className="text-slate-600 hover:text-slate-900">
+            <Link to="/login" className="text-slate-700 hover:text-primary">
               Login
             </Link>
             <Link
@@ -38,12 +38,13 @@ export default function LandingPage() {
       </header>
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-        <h1 className="text-5xl md:text-6xl font-bold mb-6">
+        <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6">
           Land Your Dream Job with <span className="text-primary">AI</span>
         </h1>
-        <p className="text-xl text-slate-600 mb-8 max-w-3xl mx-auto">
+        <p className="text-xl text-slate-700 mb-8 max-w-3xl mx-auto">
           Generate tailored cover letters, optimize your resume, and track applications—all powered by AI
         </p>
+        <p className="mt-6 text-lg leading-8 text-slate-600">AI tools for job seekers — generate tailored resumes, smart cover letters, and manage applications. Visit <a href="https://www.shvii.ai" className="text-indigo-600 hover:underline">www.shvii.ai</a>.</p>
         <Link
           to="/signup"
           className="inline-block bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary-600"
@@ -54,33 +55,33 @@ export default function LandingPage() {
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-white p-8 rounded-xl border border-gray-100">
+          <div className="bg-white shadow-sm border border-slate-200 p-8 rounded-xl">
             <FileText className="w-12 h-12 text-primary mb-4" />
-            <h3 className="text-xl font-bold mb-2">AI Cover Letters</h3>
-            <p className="text-slate-600">
+            <h3 className="text-xl font-bold text-slate-900 mb-2">AI Cover Letters</h3>
+            <p className="text-slate-700">
               Generate personalized cover letters in seconds, tailored to each job
             </p>
           </div>
-          <div className="bg-white p-8 rounded-xl border border-gray-100">
+          <div className="bg-white shadow-sm border border-slate-200 p-8 rounded-xl">
             <Target className="w-12 h-12 text-primary mb-4" />
-            <h3 className="text-xl font-bold mb-2">Resume Analysis</h3>
-            <p className="text-slate-600">
+            <h3 className="text-xl font-bold text-slate-900 mb-2">Resume Analysis</h3>
+            <p className="text-slate-700">
               Get instant feedback on your resume with AI-powered insights
             </p>
           </div>
-          <div className="bg-white p-8 rounded-xl border border-gray-100">
+          <div className="bg-white shadow-sm border border-slate-200 p-8 rounded-xl">
             <TrendingUp className="w-12 h-12 text-primary mb-4" />
-            <h3 className="text-xl font-bold mb-2">Track Applications</h3>
-            <p className="text-slate-600">
+            <h3 className="text-xl font-bold text-slate-900 mb-2">Track Applications</h3>
+            <p className="text-slate-700">
               Manage all your job applications in one organized dashboard
             </p>
           </div>
         </div>
       </section>
 
-      <footer className="border-t border-gray-100 mt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-gray-600">
-          <p>&copy; 2024 Shvii. All rights reserved.</p>
+      <footer className="border-t border-slate-200 mt-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-slate-600">
+          <p>&copy; 2024 Shvii. All rights reserved. — www.shvii.ai</p>
         </div>
       </footer>
     </div>

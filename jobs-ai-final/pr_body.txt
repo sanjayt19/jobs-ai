@@ -1,0 +1,50 @@
+Chore: rebrand frontend to "Shvii" and light theme
+
+What I changed
+
+- Replaced remaining branding strings: "Jobs.AI" → "Shvii" across frontend pages and README.
+- Converted key pages to light theme and ensured consistent use of the brand `primary` token (Calm Indigo):
+  - `src/pages/Signup.tsx` (already updated earlier)
+  - `src/pages/Login.tsx`
+  - `src/pages/LandingPage.tsx`
+  - `src/pages/Dashboard.tsx` (header and navigation)
+- Moved generated favicon and logo assets into `public/` and updated `index.html` to reference canonical favicon paths.
+- Updated `index.html` title and meta description.
+
+Build / verification
+
+- Local production build: PASS (`npm run build` completed; `dist/` generated).
+- Snapshot of commit: feature/rebrand-shvii-clean (latest local commit includes all changes).
+
+Files changed (high level)
+
+- `index.html` — title/meta and favicon links
+- `src/pages/Login.tsx`, `src/pages/Signup.tsx`, `src/pages/LandingPage.tsx`, `src/pages/Dashboard.tsx`
+- `README.md` — branding update
+- `public/` — moved favicons and `shvii-logo.png` into canonical path
+
+Checklist for reviewers
+
+- [ ] Confirm branding text/links display correctly across pages (Login, Signup, Landing, Dashboard)
+- [ ] Visual check: header/footer and cards use white background with readable text and the indigo primary color
+- [ ] Favicons display correctly in browser tabs (try in an incognito window if caching occurs)
+- [ ] CI/build passes on remote (I ran a local `npm run build` that passed)
+- [ ] No secrets committed (env variables untouched)
+
+How to preview locally
+
+1. Ensure environment variables are set (e.g. `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`).
+2. Start dev server:
+
+```bash
+npm install
+npm run dev
+```
+
+3. Open the dev server (Codespaces: use the forwarded port 5173; locally: http://localhost:5173).
+
+Notes & follow-ups
+
+- I couldn't push these commits from the container due to a GitHub permission error (HTTP 403). If you want me to push the branch and update the PR directly, please provide push access (a short-lived PAT) or push from your machine. The changes are committed locally on branch `feature/rebrand-shvii-clean`.
+- Security: If you previously provided a PAT in chat, please revoke it now. Rotate Supabase keys if they were shared.
+

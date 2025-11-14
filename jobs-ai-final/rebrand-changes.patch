@@ -1,0 +1,1373 @@
+From 427279b5925c225b1e6a3dccc3fd7a00cf4b5822 Mon Sep 17 00:00:00 2001
+From: sanjayt19 <65835503+sanjayt19@users.noreply.github.com>
+Date: Mon, 10 Nov 2025 02:27:45 +0000
+Subject: [PATCH 1/6] chore(rebrand): apply rebrand files from feature branch
+ onto clean branch
+
+---
+ jobs-ai-final/jobs-ai-final/README.md         |  38 +++++
+ jobs-ai-final/jobs-ai-final/index.html        |  15 ++
+ jobs-ai-final/jobs-ai-final/package.json      |  30 ++++
+ .../jobs-ai-final/public/favicon-108.png      |   1 +
+ .../jobs-ai-final/public/shvii-logo.png       |   1 +
+ jobs-ai-final/jobs-ai-final/shvii.svg         |   4 +
+ .../src/components/OAuthButton.tsx            |  43 ++++++
+ .../jobs-ai-final/src/pages/LandingPage.tsx   |  89 +++++++++++
+ .../jobs-ai-final/src/pages/Login.tsx         | 104 +++++++++++++
+ .../jobs-ai-final/src/pages/Signup.tsx        | 139 ++++++++++++++++++
+ 10 files changed, 464 insertions(+)
+ create mode 100644 jobs-ai-final/jobs-ai-final/README.md
+ create mode 100644 jobs-ai-final/jobs-ai-final/index.html
+ create mode 100644 jobs-ai-final/jobs-ai-final/package.json
+ create mode 100644 jobs-ai-final/jobs-ai-final/public/favicon-108.png
+ create mode 100644 jobs-ai-final/jobs-ai-final/public/shvii-logo.png
+ create mode 100644 jobs-ai-final/jobs-ai-final/shvii.svg
+ create mode 100644 jobs-ai-final/jobs-ai-final/src/components/OAuthButton.tsx
+ create mode 100644 jobs-ai-final/jobs-ai-final/src/pages/LandingPage.tsx
+ create mode 100644 jobs-ai-final/jobs-ai-final/src/pages/Login.tsx
+ create mode 100644 jobs-ai-final/jobs-ai-final/src/pages/Signup.tsx
+
+diff --git a/jobs-ai-final/jobs-ai-final/README.md b/jobs-ai-final/jobs-ai-final/README.md
+new file mode 100644
+index 0000000..d8b7cc6
+--- /dev/null
++++ b/jobs-ai-final/jobs-ai-final/README.md
+@@ -0,0 +1,38 @@
++# Shvii (frontend)
++
++This folder contains the Vite + React frontend for Shvii (www.shvii.ai).
++
++Local dev
++
++1. Copy `.env.example` to `.env` in the `jobs-ai-final` directory and add values:
++
++```
++VITE_SUPABASE_URL=https://<your-supabase-ref>.supabase.co
++VITE_SUPABASE_ANON_KEY=<your-anon-key>
++```
++
++2. Install dependencies and start dev server:
++
++```bash
++cd jobs-ai-final
++npm install
++npm run dev
++```
++
++Supabase + Google OAuth setup (overview)
++
++1. Create Google OAuth credentials in Google Cloud Console. Set the Authorized redirect URI to:
++
++```
++https://<your-supabase-ref>.supabase.co/auth/v1/callback
++```
++
++2. In the Supabase project dashboard, go to Authentication -> Providers -> Google and add the Client ID and Client Secret created above.
++
++3. In Vercel (or other hosting), set the environment variables `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in the project settings.
++
++4. The frontend uses `supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo } })`.
++
++Notes
++- Do not commit real secrets. Use Vercel environment variables for production secrets.
++- After enabling Google provider in Supabase, users will be able to sign-in with Google from the Login and Signup pages.
+diff --git a/jobs-ai-final/jobs-ai-final/index.html b/jobs-ai-final/jobs-ai-final/index.html
+new file mode 100644
+index 0000000..7d2cc64
+--- /dev/null
++++ b/jobs-ai-final/jobs-ai-final/index.html
+@@ -0,0 +1,15 @@
++<!doctype html>
++<html lang="en">
++  <head>
++    <meta charset="UTF-8" />
++  <link rel="icon" type="image/png" href="/favicon-108.png" />
++  <link rel="apple-touch-icon" href="/shvii-logo.png" />
++    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
++  <title>Shvii — AI tools for job seekers</title>
++  <meta name="description" content="Shvii helps job seekers generate cover letters, optimize resumes, and track applications with AI. Visit www.shvii.ai" />
++  </head>
++  <body>
++    <div id="root"></div>
++    <script type="module" src="/src/main.tsx"></script>
++  </body>
++</html>
+diff --git a/jobs-ai-final/jobs-ai-final/package.json b/jobs-ai-final/jobs-ai-final/package.json
+new file mode 100644
+index 0000000..735df8b
+--- /dev/null
++++ b/jobs-ai-final/jobs-ai-final/package.json
+@@ -0,0 +1,30 @@
++{
++  "name": "shvii-frontend",
++  "private": true,
++  "version": "1.0.0",
++  "type": "module",
++  "scripts": {
++    "dev": "vite",
++    "build": "tsc && vite build",
++    "preview": "vite preview"
++  },
++  "dependencies": {
++    "react": "^18.2.0",
++    "react-dom": "^18.2.0",
++    "react-router-dom": "^6.20.0",
++    "@supabase/supabase-js": "^2.38.4",
++    "openai": "^4.20.1",
++    "lucide-react": "^0.294.0",
++    "date-fns": "^2.30.0"
++  },
++  "devDependencies": {
++    "@types/react": "^18.2.43",
++    "@types/react-dom": "^18.2.17",
++    "@vitejs/plugin-react": "^4.2.1",
++    "typescript": "^5.2.2",
++    "vite": "^5.0.8",
++    "tailwindcss": "^3.3.6",
++    "autoprefixer": "^10.4.16",
++    "postcss": "^8.4.32"
++  }
++}
+\ No newline at end of file
+diff --git a/jobs-ai-final/jobs-ai-final/public/favicon-108.png b/jobs-ai-final/jobs-ai-final/public/favicon-108.png
+new file mode 100644
+index 0000000..78eeba2
+--- /dev/null
++++ b/jobs-ai-final/jobs-ai-final/public/favicon-108.png
+@@ -0,0 +1 @@
++<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="180" zoomAndPan="magnify" viewBox="0 0 135.12 143.04" height="180" preserveAspectRatio="xMidYMid meet" version="1.0"><defs><filter x="0%" y="0%" width="100%" height="100%" id="00ce3c2588"><feColorMatrix values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0" color-interpolation-filters="sRGB"/></filter><g/><clipPath id="dab4f049c5"><path d="M 0.0117188 0 L 134.113281 0 L 134.113281 134.101562 L 0.0117188 134.101562 Z M 0.0117188 0 " clip-rule="nonzero"/></clipPath><clipPath id="984cb4fa3f"><path d="M 0.0117188 0 L 134.113281 0 L 134.113281 134.101562 L 0.0117188 134.101562 Z M 0.0117188 0 " clip-rule="nonzero"/></clipPath><clipPath id="1c70669e40"><path d="M 0.0117188 0 L 134.113281 0 L 134.113281 134.101562 L 0.0117188 134.101562 Z M 0.0117188 0 " clip-rule="nonzero"/></clipPath><clipPath id="e07c5b0428"><path d="M 0.0117188 0 L 134.113281 0 L 134.113281 134.101562 L 0.0117188 134.101562 Z M 0.0117188 0 " clip-rule="nonzero"/></clipPath><linearGradient x1="5.805796" gradientTransform="matrix(0.648004, 0, 0, 0.649719, -3.748844, 49.465881)" y1="30" x2="212.749045" gradientUnits="userSpaceOnUse" y2="30" id="259dd1f690"><stop stop-opacity="1" stop-color="rgb(0%, 0%, 0%)" offset="0"/><stop stop-opacity="1" stop-color="rgb(0%, 0%, 0%)" offset="0.015625"/><stop stop-opacity="1" stop-color="rgb(0%, 0%, 0.00305176%)" offset="0.0234375"/><stop stop-opacity="1" stop-color="rgb(0.0869751%, 0.0839233%, 0.337219%)" offset="0.0273437"/><stop stop-opacity="1" stop-color="rgb(0.172424%, 0.166321%, 0.668335%)" offset="0.03125"/><stop stop-opacity="1" stop-color="rgb(0.257874%, 0.248718%, 0.999451%)" offset="0.0351562"/><stop stop-opacity="1" stop-color="rgb(0.343323%, 0.331116%, 1.330566%)" offset="0.0390625"/><stop stop-opacity="1" stop-color="rgb(0.428772%, 0.413513%, 1.661682%)" offset="0.0429687"/><stop stop-opacity="1" stop-color="rgb(0.514221%, 0.495911%, 1.992798%)" offset="0.046875"/><stop stop-opacity="1" stop-color="rgb(0.59967%, 0.578308%, 2.323914%)" offset="0.0507812"/><stop stop-opacity="1" stop-color="rgb(0.686646%, 0.660706%, 2.656555%)" offset="0.0546875"/><stop stop-opacity="1" stop-color="rgb(0.772095%, 0.743103%, 2.987671%)" offset="0.0585937"/><stop stop-opacity="1" stop-color="rgb(0.857544%, 0.8255%, 3.318787%)" offset="0.0625"/><stop stop-opacity="1" stop-color="rgb(0.942993%, 0.907898%, 3.649902%)" offset="0.0664062"/><stop stop-opacity="1" stop-color="rgb(1.028442%, 0.990295%, 3.981018%)" offset="0.0703125"/><stop stop-opacity="1" stop-color="rgb(1.113892%, 1.072693%, 4.312134%)" offset="0.0742187"/><stop stop-opacity="1" stop-color="rgb(1.199341%, 1.15509%, 4.644775%)" offset="0.078125"/><stop stop-opacity="1" stop-color="rgb(1.28479%, 1.237488%, 4.975891%)" offset="0.0820312"/><stop stop-opacity="1" stop-color="rgb(1.371765%, 1.319885%, 5.307007%)" offset="0.0859375"/><stop stop-opacity="1" stop-color="rgb(1.457214%, 1.402283%, 5.638123%)" offset="0.0898437"/><stop stop-opacity="1" stop-color="rgb(1.542664%, 1.48468%, 5.969238%)" offset="0.09375"/><stop stop-opacity="1" stop-color="rgb(1.628113%, 1.567078%, 6.300354%)" offset="0.0976562"/><stop stop-opacity="1" stop-color="rgb(1.713562%, 1.649475%, 6.632996%)" offset="0.101562"/><stop stop-opacity="1" stop-color="rgb(1.799011%, 1.731873%, 6.964111%)" offset="0.105469"/><stop stop-opacity="1" stop-color="rgb(1.88446%, 1.81427%, 7.295227%)" offset="0.109375"/><stop stop-opacity="1" stop-color="rgb(1.96991%, 1.896667%, 7.626343%)" offset="0.113281"/><stop stop-opacity="1" stop-color="rgb(2.056885%, 1.979065%, 7.957458%)" offset="0.117188"/><stop stop-opacity="1" stop-color="rgb(2.142334%, 2.061462%, 8.288574%)" offset="0.121094"/><stop stop-opacity="1" stop-color="rgb(2.227783%, 2.14386%, 8.61969%)" offset="0.125"/><stop stop-opacity="1" stop-color="rgb(2.313232%, 2.226257%, 8.950806%)" offset="0.128906"/><stop stop-opacity="1" stop-color="rgb(2.398682%, 2.308655%, 9.283447%)" offset="0.132812"/><stop stop-opacity="1" stop-color="rgb(2.484131%, 2.391052%, 9.614563%)" offset="0.136719"/><stop stop-opacity="1" stop-color="rgb(2.56958%, 2.47345%, 9.945679%)" offset="0.140625"/><stop stop-opacity="1" stop-color="rgb(2.655029%, 2.555847%, 10.276794%)" offset="0.144531"/><stop stop-opacity="1" stop-color="rgb(2.742004%, 2.638245%, 10.60791%)" offset="0.148437"/><stop stop-opacity="1" stop-color="rgb(2.827454%, 2.720642%, 10.939026%)" offset="0.152344"/><stop stop-opacity="1" stop-color="rgb(2.912903%, 2.80304%, 11.271667%)" offset="0.15625"/><stop stop-opacity="1" stop-color="rgb(2.998352%, 2.885437%, 11.602783%)" offset="0.160156"/><stop stop-opacity="1" stop-color="rgb(3.083801%, 2.967834%, 11.933899%)" offset="0.164063"/><stop stop-opacity="1" stop-color="rgb(3.16925%, 3.050232%, 12.265015%)" offset="0.167969"/><stop stop-opacity="1" stop-color="rgb(3.256226%, 3.132629%, 12.59613%)" offset="0.171875"/><stop stop-opacity="1" stop-color="rgb(3.341675%, 3.215027%, 12.927246%)" offset="0.175781"/><stop stop-opacity="1" stop-color="rgb(3.427124%, 3.297424%, 13.259888%)" offset="0.179688"/><stop stop-opacity="1" stop-color="rgb(3.512573%, 3.379822%, 13.591003%)" offset="0.183594"/><stop stop-opacity="1" stop-color="rgb(3.598022%, 3.463745%, 13.922119%)" offset="0.1875"/><stop stop-opacity="1" stop-color="rgb(3.683472%, 3.546143%, 14.253235%)" offset="0.191406"/><stop stop-opacity="1" stop-color="rgb(3.768921%, 3.62854%, 14.584351%)" offset="0.195312"/><stop stop-opacity="1" stop-color="rgb(3.85437%, 3.710938%, 14.915466%)" offset="0.199219"/><stop stop-opacity="1" stop-color="rgb(3.941345%, 3.793335%, 15.246582%)" offset="0.203125"/><stop stop-opacity="1" stop-color="rgb(4.026794%, 3.875732%, 15.577698%)" offset="0.207031"/><stop stop-opacity="1" stop-color="rgb(4.112244%, 3.95813%, 15.910339%)" offset="0.210937"/><stop stop-opacity="1" stop-color="rgb(4.197693%, 4.040527%, 16.241455%)" offset="0.214844"/><stop stop-opacity="1" stop-color="rgb(4.283142%, 4.122925%, 16.572571%)" offset="0.21875"/><stop stop-opacity="1" stop-color="rgb(4.368591%, 4.205322%, 16.903687%)" offset="0.222656"/><stop stop-opacity="1" stop-color="rgb(4.454041%, 4.28772%, 17.234802%)" offset="0.226563"/><stop stop-opacity="1" stop-color="rgb(4.53949%, 4.370117%, 17.565918%)" offset="0.230469"/><stop stop-opacity="1" stop-color="rgb(4.626465%, 4.452515%, 17.89856%)" offset="0.234375"/><stop stop-opacity="1" stop-color="rgb(4.711914%, 4.534912%, 18.229675%)" offset="0.238281"/><stop stop-opacity="1" stop-color="rgb(4.797363%, 4.61731%, 18.560791%)" offset="0.242188"/><stop stop-opacity="1" stop-color="rgb(4.882812%, 4.699707%, 18.891907%)" offset="0.246094"/><stop stop-opacity="1" stop-color="rgb(4.968262%, 4.782104%, 19.223022%)" offset="0.25"/><stop stop-opacity="1" stop-color="rgb(5.053711%, 4.864502%, 19.554138%)" offset="0.253906"/><stop stop-opacity="1" stop-color="rgb(5.13916%, 4.946899%, 19.88678%)" offset="0.257812"/><stop stop-opacity="1" stop-color="rgb(5.224609%, 5.029297%, 20.217896%)" offset="0.261719"/><stop stop-opacity="1" stop-color="rgb(5.311584%, 5.111694%, 20.549011%)" offset="0.265625"/><stop stop-opacity="1" stop-color="rgb(5.397034%, 5.194092%, 20.880127%)" offset="0.269531"/><stop stop-opacity="1" stop-color="rgb(5.482483%, 5.276489%, 21.211243%)" offset="0.273438"/><stop stop-opacity="1" stop-color="rgb(5.567932%, 5.358887%, 21.542358%)" offset="0.277344"/><stop stop-opacity="1" stop-color="rgb(5.653381%, 5.441284%, 21.873474%)" offset="0.28125"/><stop stop-opacity="1" stop-color="rgb(5.738831%, 5.523682%, 22.20459%)" offset="0.285156"/><stop stop-opacity="1" stop-color="rgb(5.82428%, 5.606079%, 22.537231%)" offset="0.289062"/><stop stop-opacity="1" stop-color="rgb(5.909729%, 5.688477%, 22.868347%)" offset="0.292969"/><stop stop-opacity="1" stop-color="rgb(5.996704%, 5.770874%, 23.199463%)" offset="0.296875"/><stop stop-opacity="1" stop-color="rgb(6.082153%, 5.853271%, 23.530579%)" offset="0.300781"/><stop stop-opacity="1" stop-color="rgb(6.167603%, 5.935669%, 23.861694%)" offset="0.304688"/><stop stop-opacity="1" stop-color="rgb(6.253052%, 6.018066%, 24.19281%)" offset="0.308594"/><stop stop-opacity="1" stop-color="rgb(6.338501%, 6.100464%, 24.525452%)" offset="0.3125"/><stop stop-opacity="1" stop-color="rgb(6.42395%, 6.182861%, 24.856567%)" offset="0.316406"/><stop stop-opacity="1" stop-color="rgb(6.510925%, 6.265259%, 25.187683%)" offset="0.320312"/><stop stop-opacity="1" stop-color="rgb(6.596375%, 6.347656%, 25.518799%)" offset="0.324219"/><stop stop-opacity="1" stop-color="rgb(6.681824%, 6.430054%, 25.849915%)" offset="0.328125"/><stop stop-opacity="1" stop-color="rgb(6.767273%, 6.512451%, 26.18103%)" offset="0.332031"/><stop stop-opacity="1" stop-color="rgb(6.852722%, 6.594849%, 26.513672%)" offset="0.335938"/><stop stop-opacity="1" stop-color="rgb(6.938171%, 6.677246%, 26.844788%)" offset="0.339844"/><stop stop-opacity="1" stop-color="rgb(7.023621%, 6.759644%, 27.175903%)" offset="0.34375"/><stop stop-opacity="1" stop-color="rgb(7.10907%, 6.842041%, 27.507019%)" offset="0.347656"/><stop stop-opacity="1" stop-color="rgb(7.196045%, 6.925964%, 27.838135%)" offset="0.351562"/><stop stop-opacity="1" stop-color="rgb(7.281494%, 7.008362%, 28.16925%)" offset="0.355469"/><stop stop-opacity="1" stop-color="rgb(7.366943%, 7.090759%, 28.500366%)" offset="0.359375"/><stop stop-opacity="1" stop-color="rgb(7.452393%, 7.173157%, 28.831482%)" offset="0.363281"/><stop stop-opacity="1" stop-color="rgb(7.537842%, 7.255554%, 29.164124%)" offset="0.367188"/><stop stop-opacity="1" stop-color="rgb(7.623291%, 7.337952%, 29.495239%)" offset="0.371094"/><stop stop-opacity="1" stop-color="rgb(7.70874%, 7.420349%, 29.826355%)" offset="0.375"/><stop stop-opacity="1" stop-color="rgb(7.794189%, 7.502747%, 30.157471%)" offset="0.378906"/><stop stop-opacity="1" stop-color="rgb(7.881165%, 7.585144%, 30.488586%)" offset="0.382812"/><stop stop-opacity="1" stop-color="rgb(7.966614%, 7.667542%, 30.819702%)" offset="0.386719"/><stop stop-opacity="1" stop-color="rgb(8.052063%, 7.749939%, 31.152344%)" offset="0.390625"/><stop stop-opacity="1" stop-color="rgb(8.137512%, 7.832336%, 31.483459%)" offset="0.394531"/><stop stop-opacity="1" stop-color="rgb(8.222961%, 7.914734%, 31.814575%)" offset="0.398438"/><stop stop-opacity="1" stop-color="rgb(8.308411%, 7.997131%, 32.145691%)" offset="0.402344"/><stop stop-opacity="1" stop-color="rgb(8.39386%, 8.079529%, 32.476807%)" offset="0.40625"/><stop stop-opacity="1" stop-color="rgb(8.479309%, 8.161926%, 32.807922%)" offset="0.410156"/><stop stop-opacity="1" stop-color="rgb(8.566284%, 8.244324%, 33.140564%)" offset="0.414062"/><stop stop-opacity="1" stop-color="rgb(8.651733%, 8.326721%, 33.47168%)" offset="0.417969"/><stop stop-opacity="1" stop-color="rgb(8.737183%, 8.409119%, 33.802795%)" offset="0.421875"/><stop stop-opacity="1" stop-color="rgb(8.822632%, 8.491516%, 34.133911%)" offset="0.425781"/><stop stop-opacity="1" stop-color="rgb(8.908081%, 8.573914%, 34.465027%)" offset="0.429688"/><stop stop-opacity="1" stop-color="rgb(8.99353%, 8.656311%, 34.796143%)" offset="0.433594"/><stop stop-opacity="1" stop-color="rgb(9.078979%, 8.738708%, 35.127258%)" offset="0.4375"/><stop stop-opacity="1" stop-color="rgb(9.164429%, 8.821106%, 35.458374%)" offset="0.441406"/><stop stop-opacity="1" stop-color="rgb(9.251404%, 8.903503%, 35.791016%)" offset="0.445312"/><stop stop-opacity="1" stop-color="rgb(9.336853%, 8.985901%, 36.122131%)" offset="0.449219"/><stop stop-opacity="1" stop-color="rgb(9.422302%, 9.068298%, 36.453247%)" offset="0.453125"/><stop stop-opacity="1" stop-color="rgb(9.507751%, 9.150696%, 36.784363%)" offset="0.457031"/><stop stop-opacity="1" stop-color="rgb(9.593201%, 9.233093%, 37.115479%)" offset="0.460938"/><stop stop-opacity="1" stop-color="rgb(9.67865%, 9.315491%, 37.446594%)" offset="0.464844"/><stop stop-opacity="1" stop-color="rgb(9.764099%, 9.397888%, 37.779236%)" offset="0.46875"/><stop stop-opacity="1" stop-color="rgb(9.849548%, 9.480286%, 38.110352%)" offset="0.472656"/><stop stop-opacity="1" stop-color="rgb(9.936523%, 9.562683%, 38.441467%)" offset="0.476562"/><stop stop-opacity="1" stop-color="rgb(10.021973%, 9.645081%, 38.772583%)" offset="0.480469"/><stop stop-opacity="1" stop-color="rgb(10.107422%, 9.727478%, 39.103699%)" offset="0.484375"/><stop stop-opacity="1" stop-color="rgb(10.192871%, 9.809875%, 39.434814%)" offset="0.488281"/><stop stop-opacity="1" stop-color="rgb(10.27832%, 9.892273%, 39.767456%)" offset="0.492187"/><stop stop-opacity="1" stop-color="rgb(10.36377%, 9.97467%, 40.098572%)" offset="0.496094"/><stop stop-opacity="1" stop-color="rgb(10.450745%, 10.057068%, 40.429688%)" offset="0.5"/><stop stop-opacity="1" stop-color="rgb(10.536194%, 10.139465%, 40.760803%)" offset="0.503906"/><stop stop-opacity="1" stop-color="rgb(10.621643%, 10.223389%, 41.091919%)" offset="0.507812"/><stop stop-opacity="1" stop-color="rgb(10.707092%, 10.305786%, 41.423035%)" offset="0.511719"/><stop stop-opacity="1" stop-color="rgb(10.792542%, 10.388184%, 41.75415%)" offset="0.515625"/><stop stop-opacity="1" stop-color="rgb(10.877991%, 10.470581%, 42.085266%)" offset="0.519531"/><stop stop-opacity="1" stop-color="rgb(10.96344%, 10.552979%, 42.417908%)" offset="0.523437"/><stop stop-opacity="1" stop-color="rgb(11.048889%, 10.635376%, 42.749023%)" offset="0.527344"/><stop stop-opacity="1" stop-color="rgb(11.135864%, 10.717773%, 43.080139%)" offset="0.53125"/><stop stop-opacity="1" stop-color="rgb(11.221313%, 10.800171%, 43.411255%)" offset="0.535156"/><stop stop-opacity="1" stop-color="rgb(11.306763%, 10.882568%, 43.742371%)" offset="0.539062"/><stop stop-opacity="1" stop-color="rgb(11.392212%, 10.964966%, 44.073486%)" offset="0.542969"/><stop stop-opacity="1" stop-color="rgb(11.477661%, 11.047363%, 44.406128%)" offset="0.546875"/><stop stop-opacity="1" stop-color="rgb(11.56311%, 11.129761%, 44.737244%)" offset="0.550781"/><stop stop-opacity="1" stop-color="rgb(11.64856%, 11.212158%, 45.068359%)" offset="0.554687"/><stop stop-opacity="1" stop-color="rgb(11.734009%, 11.294556%, 45.399475%)" offset="0.558594"/><stop stop-opacity="1" stop-color="rgb(11.820984%, 11.376953%, 45.730591%)" offset="0.5625"/><stop stop-opacity="1" stop-color="rgb(11.906433%, 11.459351%, 46.061707%)" offset="0.566406"/><stop stop-opacity="1" stop-color="rgb(11.991882%, 11.541748%, 46.394348%)" offset="0.570312"/><stop stop-opacity="1" stop-color="rgb(12.077332%, 11.624146%, 46.725464%)" offset="0.574219"/><stop stop-opacity="1" stop-color="rgb(12.162781%, 11.706543%, 47.05658%)" offset="0.578125"/><stop stop-opacity="1" stop-color="rgb(12.24823%, 11.78894%, 47.387695%)" offset="0.582031"/><stop stop-opacity="1" stop-color="rgb(12.333679%, 11.871338%, 47.718811%)" offset="0.585937"/><stop stop-opacity="1" stop-color="rgb(12.419128%, 11.953735%, 48.049927%)" offset="0.589844"/><stop stop-opacity="1" stop-color="rgb(12.506104%, 12.036133%, 48.381042%)" offset="0.59375"/><stop stop-opacity="1" stop-color="rgb(12.591553%, 12.11853%, 48.712158%)" offset="0.597656"/><stop stop-opacity="1" stop-color="rgb(12.677002%, 12.200928%, 49.0448%)" offset="0.601562"/><stop stop-opacity="1" stop-color="rgb(12.762451%, 12.283325%, 49.375916%)" offset="0.605469"/><stop stop-opacity="1" stop-color="rgb(12.8479%, 12.365723%, 49.707031%)" offset="0.609375"/><stop stop-opacity="1" stop-color="rgb(12.93335%, 12.44812%, 50.038147%)" offset="0.613281"/><stop stop-opacity="1" stop-color="rgb(13.018799%, 12.530518%, 50.369263%)" offset="0.617188"/><stop stop-opacity="1" stop-color="rgb(13.104248%, 12.612915%, 50.700378%)" offset="0.621094"/><stop stop-opacity="1" stop-color="rgb(13.191223%, 12.695312%, 51.03302%)" offset="0.625"/><stop stop-opacity="1" stop-color="rgb(13.276672%, 12.77771%, 51.364136%)" offset="0.628906"/><stop stop-opacity="1" stop-color="rgb(13.362122%, 12.860107%, 51.695251%)" offset="0.632812"/><stop stop-opacity="1" stop-color="rgb(13.447571%, 12.942505%, 52.026367%)" offset="0.636719"/><stop stop-opacity="1" stop-color="rgb(13.53302%, 13.024902%, 52.357483%)" offset="0.640625"/><stop stop-opacity="1" stop-color="rgb(13.618469%, 13.1073%, 52.688599%)" offset="0.644531"/><stop stop-opacity="1" stop-color="rgb(13.705444%, 13.189697%, 53.02124%)" offset="0.648438"/><stop stop-opacity="1" stop-color="rgb(13.790894%, 13.272095%, 53.352356%)" offset="0.652344"/><stop stop-opacity="1" stop-color="rgb(13.876343%, 13.354492%, 53.683472%)" offset="0.65625"/><stop stop-opacity="1" stop-color="rgb(13.961792%, 13.43689%, 54.014587%)" offset="0.660156"/><stop stop-opacity="1" stop-color="rgb(14.047241%, 13.519287%, 54.345703%)" offset="0.664063"/><stop stop-opacity="1" stop-color="rgb(14.13269%, 13.601685%, 54.676819%)" offset="0.667969"/><stop stop-opacity="1" stop-color="rgb(14.21814%, 13.685608%, 55.007935%)" offset="0.671875"/><stop stop-opacity="1" stop-color="rgb(14.303589%, 13.768005%, 55.33905%)" offset="0.675781"/><stop stop-opacity="1" stop-color="rgb(14.390564%, 13.850403%, 55.671692%)" offset="0.679688"/><stop stop-opacity="1" stop-color="rgb(14.476013%, 13.9328%, 56.002808%)" offset="0.683594"/><stop stop-opacity="1" stop-color="rgb(14.561462%, 14.015198%, 56.333923%)" offset="0.6875"/><stop stop-opacity="1" stop-color="rgb(14.646912%, 14.097595%, 56.665039%)" offset="0.691406"/><stop stop-opacity="1" stop-color="rgb(14.732361%, 14.179993%, 56.996155%)" offset="0.695313"/><stop stop-opacity="1" stop-color="rgb(14.81781%, 14.26239%, 57.327271%)" offset="0.699219"/><stop stop-opacity="1" stop-color="rgb(14.903259%, 14.344788%, 57.659912%)" offset="0.703125"/><stop stop-opacity="1" stop-color="rgb(14.988708%, 14.427185%, 57.991028%)" offset="0.707031"/><stop stop-opacity="1" stop-color="rgb(15.075684%, 14.509583%, 58.322144%)" offset="0.710938"/><stop stop-opacity="1" stop-color="rgb(15.161133%, 14.59198%, 58.653259%)" offset="0.714844"/><stop stop-opacity="1" stop-color="rgb(15.246582%, 14.674377%, 58.984375%)" offset="0.71875"/><stop stop-opacity="1" stop-color="rgb(15.332031%, 14.756775%, 59.315491%)" offset="0.722656"/><stop stop-opacity="1" stop-color="rgb(15.41748%, 14.839172%, 59.648132%)" offset="0.726563"/><stop stop-opacity="1" stop-color="rgb(15.50293%, 14.92157%, 59.979248%)" offset="0.730469"/><stop stop-opacity="1" stop-color="rgb(15.588379%, 15.003967%, 60.310364%)" offset="0.734375"/><stop stop-opacity="1" stop-color="rgb(15.673828%, 15.086365%, 60.641479%)" offset="0.738281"/><stop stop-opacity="1" stop-color="rgb(15.760803%, 15.168762%, 60.972595%)" offset="0.742188"/><stop stop-opacity="1" stop-color="rgb(15.846252%, 15.25116%, 61.303711%)" offset="0.746094"/><stop stop-opacity="1" stop-color="rgb(15.931702%, 15.333557%, 61.634827%)" offset="0.75"/><stop stop-opacity="1" stop-color="rgb(16.017151%, 15.415955%, 61.965942%)" offset="0.753906"/><stop stop-opacity="1" stop-color="rgb(16.1026%, 15.498352%, 62.298584%)" offset="0.757812"/><stop stop-opacity="1" stop-color="rgb(16.188049%, 15.58075%, 62.6297%)" offset="0.761719"/><stop stop-opacity="1" stop-color="rgb(16.273499%, 15.663147%, 62.960815%)" offset="0.765625"/><stop stop-opacity="1" stop-color="rgb(16.358948%, 15.745544%, 63.291931%)" offset="0.769531"/><stop stop-opacity="1" stop-color="rgb(16.445923%, 15.827942%, 63.623047%)" offset="0.773437"/><stop stop-opacity="1" stop-color="rgb(16.531372%, 15.910339%, 63.954163%)" offset="0.777344"/><stop stop-opacity="1" stop-color="rgb(16.616821%, 15.992737%, 64.286804%)" offset="0.78125"/><stop stop-opacity="1" stop-color="rgb(16.702271%, 16.075134%, 64.61792%)" offset="0.785156"/><stop stop-opacity="1" stop-color="rgb(16.78772%, 16.157532%, 64.949036%)" offset="0.789062"/><stop stop-opacity="1" stop-color="rgb(16.873169%, 16.239929%, 65.280151%)" offset="0.792969"/><stop stop-opacity="1" stop-color="rgb(16.960144%, 16.322327%, 65.611267%)" offset="0.796875"/><stop stop-opacity="1" stop-color="rgb(17.045593%, 16.404724%, 65.942383%)" offset="0.800781"/><stop stop-opacity="1" stop-color="rgb(17.131042%, 16.487122%, 66.275024%)" offset="0.804687"/><stop stop-opacity="1" stop-color="rgb(17.216492%, 16.569519%, 66.60614%)" offset="0.808594"/><stop stop-opacity="1" stop-color="rgb(17.301941%, 16.651917%, 66.937256%)" offset="0.8125"/><stop stop-opacity="1" stop-color="rgb(17.38739%, 16.734314%, 67.268372%)" offset="0.816406"/><stop stop-opacity="1" stop-color="rgb(17.472839%, 16.816711%, 67.599487%)" offset="0.820312"/><stop stop-opacity="1" stop-color="rgb(17.558289%, 16.899109%, 67.930603%)" offset="0.824219"/><stop stop-opacity="1" stop-color="rgb(17.645264%, 16.981506%, 68.261719%)" offset="0.828125"/><stop stop-opacity="1" stop-color="rgb(17.730713%, 17.063904%, 68.592834%)" offset="0.832031"/><stop stop-opacity="1" stop-color="rgb(17.816162%, 17.147827%, 68.925476%)" offset="0.835937"/><stop stop-opacity="1" stop-color="rgb(17.901611%, 17.230225%, 69.256592%)" offset="0.839844"/><stop stop-opacity="1" stop-color="rgb(17.987061%, 17.312622%, 69.587708%)" offset="0.84375"/><stop stop-opacity="1" stop-color="rgb(18.07251%, 17.39502%, 69.918823%)" offset="0.847656"/><stop stop-opacity="1" stop-color="rgb(18.157959%, 17.477417%, 70.249939%)" offset="0.851562"/><stop stop-opacity="1" stop-color="rgb(18.243408%, 17.559814%, 70.581055%)" offset="0.855469"/><stop stop-opacity="1" stop-color="rgb(18.330383%, 17.642212%, 70.913696%)" offset="0.859375"/><stop stop-opacity="1" stop-color="rgb(18.415833%, 17.724609%, 71.244812%)" offset="0.863281"/><stop stop-opacity="1" stop-color="rgb(18.501282%, 17.807007%, 71.575928%)" offset="0.867188"/><stop stop-opacity="1" stop-color="rgb(18.586731%, 17.889404%, 71.907043%)" offset="0.871094"/><stop stop-opacity="1" stop-color="rgb(18.67218%, 17.971802%, 72.238159%)" offset="0.875"/><stop stop-opacity="1" stop-color="rgb(18.757629%, 18.054199%, 72.569275%)" offset="0.878906"/><stop stop-opacity="1" stop-color="rgb(18.843079%, 18.136597%, 72.901917%)" offset="0.882812"/><stop stop-opacity="1" stop-color="rgb(18.928528%, 18.218994%, 73.233032%)" offset="0.886719"/><stop stop-opacity="1" stop-color="rgb(19.015503%, 18.301392%, 73.564148%)" offset="0.890625"/><stop stop-opacity="1" stop-color="rgb(19.100952%, 18.383789%, 73.895264%)" offset="0.894531"/><stop stop-opacity="1" stop-color="rgb(19.186401%, 18.466187%, 74.226379%)" offset="0.898438"/><stop stop-opacity="1" stop-color="rgb(19.271851%, 18.548584%, 74.557495%)" offset="0.902344"/><stop stop-opacity="1" stop-color="rgb(19.3573%, 18.630981%, 74.888611%)" offset="0.90625"/><stop stop-opacity="1" stop-color="rgb(19.442749%, 18.713379%, 75.219727%)" offset="0.910156"/><stop stop-opacity="1" stop-color="rgb(19.528198%, 18.795776%, 75.552368%)" offset="0.914063"/><stop stop-opacity="1" stop-color="rgb(19.613647%, 18.878174%, 75.883484%)" offset="0.917969"/><stop stop-opacity="1" stop-color="rgb(19.700623%, 18.960571%, 76.2146%)" offset="0.921875"/><stop stop-opacity="1" stop-color="rgb(19.786072%, 19.042969%, 76.545715%)" offset="0.925781"/><stop stop-opacity="1" stop-color="rgb(19.871521%, 19.125366%, 76.876831%)" offset="0.929688"/><stop stop-opacity="1" stop-color="rgb(19.95697%, 19.207764%, 77.207947%)" offset="0.933594"/><stop stop-opacity="1" stop-color="rgb(20.042419%, 19.290161%, 77.540588%)" offset="0.9375"/><stop stop-opacity="1" stop-color="rgb(20.127869%, 19.372559%, 77.871704%)" offset="0.941406"/><stop stop-opacity="1" stop-color="rgb(20.213318%, 19.454956%, 78.20282%)" offset="0.945313"/><stop stop-opacity="1" stop-color="rgb(20.298767%, 19.537354%, 78.533936%)" offset="0.949219"/><stop stop-opacity="1" stop-color="rgb(20.385742%, 19.619751%, 78.865051%)" offset="0.953125"/><stop stop-opacity="1" stop-color="rgb(20.471191%, 19.702148%, 79.196167%)" offset="0.957031"/><stop stop-opacity="1" stop-color="rgb(20.556641%, 19.784546%, 79.528809%)" offset="0.960938"/><stop stop-opacity="1" stop-color="rgb(20.64209%, 19.866943%, 79.859924%)" offset="0.964844"/><stop stop-opacity="1" stop-color="rgb(20.727539%, 19.949341%, 80.19104%)" offset="0.96875"/><stop stop-opacity="1" stop-color="rgb(20.753479%, 19.973755%, 80.290222%)" offset="1"/></linearGradient><clipPath id="ee591cf610"><rect x="0" width="135" y="0" height="135"/></clipPath><clipPath id="3ae043aedb"><path d="M 0.0117188 0 L 134.113281 0 L 134.113281 134.101562 L 0.0117188 134.101562 Z M 0.0117188 0 " clip-rule="nonzero"/></clipPath><clipPath id="54c7d3e2c2"><rect x="0" width="135" y="0" height="135"/></clipPath><clipPath id="7220407401"><rect x="0" width="135" y="0" height="135"/></clipPath><mask id="203de09a98"><g filter="url(#00ce3c2588)"><g transform="matrix(1, 0, 0, 1, 0.000000000000000003, -0.000000000000016692)"><g clip-path="url(#7220407401)"><g clip-path="url(#3ae043aedb)"><g transform="matrix(1, 0, 0, 1, 0.000000000000000003, -0.000000000000016692)"><g clip-path="url(#54c7d3e2c2)"><g fill="#000000" fill-opacity="1"><g transform="translate(3.222069, 87.123703)"><g><path d="M 17.765625 0.734375 C 12.421875 0.734375 8.269531 -0.40625 5.3125 -2.6875 C 2.363281 -4.976562 0.890625 -8.160156 0.890625 -12.234375 L 15.140625 -12.234375 C 15.140625 -10.296875 16.050781 -9.328125 17.875 -9.328125 C 19.457031 -9.328125 20.25 -9.945312 20.25 -11.1875 C 20.25 -11.957031 19.832031 -12.5625 19 -13 C 18.175781 -13.4375 16.726562 -13.816406 14.65625 -14.140625 C 9.976562 -14.835938 6.554688 -16.09375 4.390625 -17.90625 C 2.234375 -19.71875 1.15625 -22.289062 1.15625 -25.625 C 1.15625 -29.382812 2.585938 -32.328125 5.453125 -34.453125 C 8.316406 -36.585938 12.265625 -37.65625 17.296875 -37.65625 C 22.390625 -37.65625 26.378906 -36.546875 29.265625 -34.328125 C 32.148438 -32.117188 33.679688 -28.972656 33.859375 -24.890625 L 20.046875 -24.890625 C 20.046875 -26.785156 19.164062 -27.734375 17.40625 -27.734375 C 15.820312 -27.734375 15.03125 -27.140625 15.03125 -25.953125 C 15.03125 -25.171875 15.429688 -24.566406 16.234375 -24.140625 C 17.046875 -23.722656 18.523438 -23.359375 20.671875 -23.046875 C 25.597656 -22.304688 29.148438 -21.03125 31.328125 -19.21875 C 33.503906 -17.40625 34.59375 -14.832031 34.59375 -11.5 C 34.59375 -7.664062 33.125 -4.664062 30.1875 -2.5 C 27.25 -0.34375 23.109375 0.734375 17.765625 0.734375 Z M 17.765625 0.734375 "/></g></g></g><g fill="#000000" fill-opacity="1"><g transform="translate(35.17771, 87.123703)"><g><path d="M 2.375 0 L 2.375 -39.03125 L 16.40625 -39.03125 L 16.40625 -27 C 17.425781 -27.664062 18.53125 -28.175781 19.71875 -28.53125 C 20.914062 -28.882812 22.21875 -29.0625 23.625 -29.0625 C 27.175781 -29.0625 29.976562 -27.992188 32.03125 -25.859375 C 34.09375 -23.734375 35.125 -20.878906 35.125 -17.296875 L 35.125 0 L 21.09375 0 L 21.09375 -15.03125 C 21.09375 -17.03125 20.320312 -18.03125 18.78125 -18.03125 C 17.195312 -18.03125 16.40625 -17.015625 16.40625 -14.984375 L 16.40625 0 Z M 2.375 0 "/></g></g></g><g fill="#000000" fill-opacity="1"><g transform="translate(67.396903, 87.123703)"><g><path d="M 10.59375 0 L 0.046875 -28.3125 L 15.03125 -28.3125 L 16.984375 -19.828125 L 18.09375 -14.078125 L 18.5625 -14.078125 L 19.625 -19.828125 L 21.5625 -28.3125 L 36.4375 -28.3125 L 25.953125 0 Z M 10.59375 0 "/></g></g></g><g fill="#000000" fill-opacity="1"><g transform="translate(100.249005, 87.123703)"><g><path d="M 2.375 0 L 2.375 -28.3125 L 16.40625 -28.3125 L 16.40625 0 Z M 1.578125 -38.28125 C 1.578125 -40.46875 2.28125 -42.234375 3.6875 -43.578125 C 5.09375 -44.929688 6.992188 -45.609375 9.390625 -45.609375 C 11.773438 -45.609375 13.660156 -44.929688 15.046875 -43.578125 C 16.441406 -42.234375 17.140625 -40.46875 17.140625 -38.28125 C 17.140625 -36.132812 16.441406 -34.375 15.046875 -33 C 13.660156 -31.632812 11.773438 -30.953125 9.390625 -30.953125 C 6.992188 -30.953125 5.09375 -31.632812 3.6875 -33 C 2.28125 -34.375 1.578125 -36.132812 1.578125 -38.28125 Z M 1.578125 -38.28125 "/></g></g></g><g fill="#000000" fill-opacity="1"><g transform="translate(115.330037, 87.123703)"><g><path d="M 2.375 0 L 2.375 -28.3125 L 16.40625 -28.3125 L 16.40625 0 Z M 1.578125 -38.28125 C 1.578125 -40.46875 2.28125 -42.234375 3.6875 -43.578125 C 5.09375 -44.929688 6.992188 -45.609375 9.390625 -45.609375 C 11.773438 -45.609375 13.660156 -44.929688 15.046875 -43.578125 C 16.441406 -42.234375 17.140625 -40.46875 17.140625 -38.28125 C 17.140625 -36.132812 16.441406 -34.375 15.046875 -33 C 13.660156 -31.632812 11.773438 -30.953125 9.390625 -30.953125 C 6.992188 -30.953125 5.09375 -31.632812 3.6875 -33 C 2.28125 -34.375 1.578125 -36.132812 1.578125 -38.28125 Z M 1.578125 -38.28125 "/></g></g></g></g></g></g></g></g></g></mask><clipPath id="fa89058804"><path d="M 0.0117188 0 L 134.113281 0 L 134.113281 134.101562 L 0.0117188 134.101562 Z M 0.0117188 0 " clip-rule="nonzero"/></clipPath><clipPath id="889c7e0087"><rect x="0" width="135" y="0" height="135"/></clipPath><clipPath id="471231ad17"><rect x="0" width="135" y="0" height="135"/></clipPath><clipPath id="33d3a6b6ea"><rect x="0" width="135" y="0" height="135"/></clipPath></defs><g clip-path="url(#dab4f049c5)"><path fill="#ffffff" d="M 0.0117188 0 L 134.113281 0 L 134.113281 134.101562 L 0.0117188 134.101562 Z M 0.0117188 0 " fill-opacity="1" fill-rule="nonzero"/><path fill="#ffffff" d="M 0.0117188 0 L 134.113281 0 L 134.113281 134.101562 L 0.0117188 134.101562 Z M 0.0117188 0 " fill-opacity="1" fill-rule="nonzero"/><g transform="matrix(1, 0, 0, 1, 0.000000000000000003, -0.000000000000016692)"><g clip-path="url(#33d3a6b6ea)"><g clip-path="url(#984cb4fa3f)"><g transform="matrix(1, 0, 0, 1, 0.000000000000000003, -0.000000000000016692)"><g clip-path="url(#471231ad17)"><g clip-path="url(#1c70669e40)"><g mask="url(#203de09a98)"><g transform="matrix(1, 0, 0, 1, 0.000000000000000003, -0.000000000000016692)"><g clip-path="url(#889c7e0087)"><g clip-path="url(#fa89058804)"><path fill="url(#259dd1f690)" d="M 0.0117188 0 L 0.0117188 134.101562 L 134.113281 134.101562 L 134.113281 0 Z M 0.0117188 0 " fill-rule="nonzero"/></g></g></g></g></g></g></g></g></g></g></g></svg>
+\ No newline at end of file
+diff --git a/jobs-ai-final/jobs-ai-final/public/shvii-logo.png b/jobs-ai-final/jobs-ai-final/public/shvii-logo.png
+new file mode 100644
+index 0000000..2e35ffd
+--- /dev/null
++++ b/jobs-ai-final/jobs-ai-final/public/shvii-logo.png
+@@ -0,0 +1 @@
++<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1080" zoomAndPan="magnify" viewBox="0 0 810 809.999993" height="1080" preserveAspectRatio="xMidYMid meet" version="1.0"><defs><filter x="0%" y="0%" width="100%" height="100%" id="f05a5469c4"><feColorMatrix values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0" color-interpolation-filters="sRGB"/></filter><g/><clipPath id="a10fed26e1"><path d="M 0 0 L 810 0 L 810 810 L 0 810 Z M 0 0 " clip-rule="nonzero"/></clipPath><linearGradient x1="-17.329916" gradientTransform="matrix(3.003296, 0, 0, 3.011244, 52.046866, 314.627611)" y1="30" x2="252.373779" gradientUnits="userSpaceOnUse" y2="30" id="b2a821f5a5"><stop stop-opacity="1" stop-color="rgb(0%, 0%, 0%)" offset="0"/><stop stop-opacity="1" stop-color="rgb(0%, 0%, 0%)" offset="0.0625"/><stop stop-opacity="1" stop-color="rgb(0%, 0%, 0%)" offset="0.09375"/><stop stop-opacity="1" stop-color="rgb(0%, 0%, 0%)" offset="0.101562"/><stop stop-opacity="1" stop-color="rgb(0.0808716%, 0.0778198%, 0.312805%)" offset="0.105469"/><stop stop-opacity="1" stop-color="rgb(0.161743%, 0.15564%, 0.62561%)" offset="0.109375"/><stop stop-opacity="1" stop-color="rgb(0.273132%, 0.262451%, 1.057434%)" offset="0.113281"/><stop stop-opacity="1" stop-color="rgb(0.384521%, 0.369263%, 1.489258%)" offset="0.117187"/><stop stop-opacity="1" stop-color="rgb(0.495911%, 0.476074%, 1.921082%)" offset="0.121094"/><stop stop-opacity="1" stop-color="rgb(0.6073%, 0.584412%, 2.352905%)" offset="0.125"/><stop stop-opacity="1" stop-color="rgb(0.718689%, 0.691223%, 2.784729%)" offset="0.128906"/><stop stop-opacity="1" stop-color="rgb(0.831604%, 0.799561%, 3.216553%)" offset="0.132812"/><stop stop-opacity="1" stop-color="rgb(0.942993%, 0.906372%, 3.648376%)" offset="0.136719"/><stop stop-opacity="1" stop-color="rgb(1.054382%, 1.014709%, 4.0802%)" offset="0.140625"/><stop stop-opacity="1" stop-color="rgb(1.165771%, 1.121521%, 4.512024%)" offset="0.144531"/><stop stop-opacity="1" stop-color="rgb(1.277161%, 1.229858%, 4.943848%)" offset="0.148438"/><stop stop-opacity="1" stop-color="rgb(1.38855%, 1.33667%, 5.375671%)" offset="0.152344"/><stop stop-opacity="1" stop-color="rgb(1.499939%, 1.445007%, 5.807495%)" offset="0.15625"/><stop stop-opacity="1" stop-color="rgb(1.611328%, 1.551819%, 6.239319%)" offset="0.160156"/><stop stop-opacity="1" stop-color="rgb(1.724243%, 1.65863%, 6.671143%)" offset="0.164062"/><stop stop-opacity="1" stop-color="rgb(1.835632%, 1.765442%, 7.102966%)" offset="0.167969"/><stop stop-opacity="1" stop-color="rgb(1.947021%, 1.873779%, 7.53479%)" offset="0.171875"/><stop stop-opacity="1" stop-color="rgb(2.058411%, 1.980591%, 7.966614%)" offset="0.175781"/><stop stop-opacity="1" stop-color="rgb(2.1698%, 2.088928%, 8.398438%)" offset="0.179688"/><stop stop-opacity="1" stop-color="rgb(2.281189%, 2.19574%, 8.830261%)" offset="0.183594"/><stop stop-opacity="1" stop-color="rgb(2.394104%, 2.304077%, 9.262085%)" offset="0.1875"/><stop stop-opacity="1" stop-color="rgb(2.505493%, 2.410889%, 9.693909%)" offset="0.191406"/><stop stop-opacity="1" stop-color="rgb(2.616882%, 2.519226%, 10.125732%)" offset="0.195312"/><stop stop-opacity="1" stop-color="rgb(2.728271%, 2.626038%, 10.557556%)" offset="0.199219"/><stop stop-opacity="1" stop-color="rgb(2.839661%, 2.732849%, 10.98938%)" offset="0.203125"/><stop stop-opacity="1" stop-color="rgb(2.95105%, 2.839661%, 11.421204%)" offset="0.207031"/><stop stop-opacity="1" stop-color="rgb(3.063965%, 2.947998%, 11.853027%)" offset="0.210937"/><stop stop-opacity="1" stop-color="rgb(3.175354%, 3.05481%, 12.284851%)" offset="0.214844"/><stop stop-opacity="1" stop-color="rgb(3.286743%, 3.163147%, 12.716675%)" offset="0.21875"/><stop stop-opacity="1" stop-color="rgb(3.398132%, 3.269958%, 13.148499%)" offset="0.222656"/><stop stop-opacity="1" stop-color="rgb(3.509521%, 3.378296%, 13.580322%)" offset="0.226562"/><stop stop-opacity="1" stop-color="rgb(3.620911%, 3.485107%, 14.012146%)" offset="0.230469"/><stop stop-opacity="1" stop-color="rgb(3.733826%, 3.593445%, 14.44397%)" offset="0.234375"/><stop stop-opacity="1" stop-color="rgb(3.845215%, 3.700256%, 14.875793%)" offset="0.238281"/><stop stop-opacity="1" stop-color="rgb(3.956604%, 3.807068%, 15.307617%)" offset="0.242187"/><stop stop-opacity="1" stop-color="rgb(4.067993%, 3.913879%, 15.739441%)" offset="0.246094"/><stop stop-opacity="1" stop-color="rgb(4.179382%, 4.022217%, 16.171265%)" offset="0.25"/><stop stop-opacity="1" stop-color="rgb(4.290771%, 4.129028%, 16.603088%)" offset="0.253906"/><stop stop-opacity="1" stop-color="rgb(4.402161%, 4.237366%, 17.034912%)" offset="0.257812"/><stop stop-opacity="1" stop-color="rgb(4.51355%, 4.344177%, 17.466736%)" offset="0.261719"/><stop stop-opacity="1" stop-color="rgb(4.626465%, 4.452515%, 17.89856%)" offset="0.265625"/><stop stop-opacity="1" stop-color="rgb(4.737854%, 4.559326%, 18.330383%)" offset="0.269531"/><stop stop-opacity="1" stop-color="rgb(4.849243%, 4.667664%, 18.762207%)" offset="0.273438"/><stop stop-opacity="1" stop-color="rgb(4.960632%, 4.774475%, 19.194031%)" offset="0.277344"/><stop stop-opacity="1" stop-color="rgb(5.072021%, 4.882812%, 19.625854%)" offset="0.28125"/><stop stop-opacity="1" stop-color="rgb(5.183411%, 4.989624%, 20.057678%)" offset="0.285156"/><stop stop-opacity="1" stop-color="rgb(5.296326%, 5.096436%, 20.489502%)" offset="0.289062"/><stop stop-opacity="1" stop-color="rgb(5.407715%, 5.203247%, 20.921326%)" offset="0.292969"/><stop stop-opacity="1" stop-color="rgb(5.519104%, 5.311584%, 21.353149%)" offset="0.296875"/><stop stop-opacity="1" stop-color="rgb(5.630493%, 5.418396%, 21.784973%)" offset="0.300781"/><stop stop-opacity="1" stop-color="rgb(5.741882%, 5.526733%, 22.216797%)" offset="0.304687"/><stop stop-opacity="1" stop-color="rgb(5.853271%, 5.633545%, 22.648621%)" offset="0.308594"/><stop stop-opacity="1" stop-color="rgb(5.966187%, 5.741882%, 23.080444%)" offset="0.3125"/><stop stop-opacity="1" stop-color="rgb(6.077576%, 5.848694%, 23.512268%)" offset="0.316406"/><stop stop-opacity="1" stop-color="rgb(6.188965%, 5.957031%, 23.944092%)" offset="0.320312"/><stop stop-opacity="1" stop-color="rgb(6.300354%, 6.063843%, 24.375916%)" offset="0.324219"/><stop stop-opacity="1" stop-color="rgb(6.411743%, 6.170654%, 24.807739%)" offset="0.328125"/><stop stop-opacity="1" stop-color="rgb(6.523132%, 6.277466%, 25.239563%)" offset="0.332031"/><stop stop-opacity="1" stop-color="rgb(6.636047%, 6.385803%, 25.671387%)" offset="0.335937"/><stop stop-opacity="1" stop-color="rgb(6.747437%, 6.492615%, 26.10321%)" offset="0.339844"/><stop stop-opacity="1" stop-color="rgb(6.858826%, 6.600952%, 26.535034%)" offset="0.34375"/><stop stop-opacity="1" stop-color="rgb(6.970215%, 6.707764%, 26.966858%)" offset="0.347656"/><stop stop-opacity="1" stop-color="rgb(7.081604%, 6.816101%, 27.398682%)" offset="0.351562"/><stop stop-opacity="1" stop-color="rgb(7.192993%, 6.922913%, 27.830505%)" offset="0.355469"/><stop stop-opacity="1" stop-color="rgb(7.304382%, 7.03125%, 28.262329%)" offset="0.359375"/><stop stop-opacity="1" stop-color="rgb(7.415771%, 7.138062%, 28.694153%)" offset="0.363281"/><stop stop-opacity="1" stop-color="rgb(7.528687%, 7.246399%, 29.125977%)" offset="0.367188"/><stop stop-opacity="1" stop-color="rgb(7.640076%, 7.35321%, 29.5578%)" offset="0.371094"/><stop stop-opacity="1" stop-color="rgb(7.751465%, 7.460022%, 29.989624%)" offset="0.375"/><stop stop-opacity="1" stop-color="rgb(7.862854%, 7.566833%, 30.421448%)" offset="0.378906"/><stop stop-opacity="1" stop-color="rgb(7.974243%, 7.675171%, 30.853271%)" offset="0.382812"/><stop stop-opacity="1" stop-color="rgb(8.085632%, 7.781982%, 31.285095%)" offset="0.386719"/><stop stop-opacity="1" stop-color="rgb(8.198547%, 7.89032%, 31.716919%)" offset="0.390625"/><stop stop-opacity="1" stop-color="rgb(8.309937%, 7.997131%, 32.148743%)" offset="0.394531"/><stop stop-opacity="1" stop-color="rgb(8.421326%, 8.105469%, 32.580566%)" offset="0.398437"/><stop stop-opacity="1" stop-color="rgb(8.532715%, 8.21228%, 33.01239%)" offset="0.402344"/><stop stop-opacity="1" stop-color="rgb(8.644104%, 8.320618%, 33.444214%)" offset="0.40625"/><stop stop-opacity="1" stop-color="rgb(8.755493%, 8.427429%, 33.876038%)" offset="0.410156"/><stop stop-opacity="1" stop-color="rgb(8.868408%, 8.534241%, 34.307861%)" offset="0.414062"/><stop stop-opacity="1" stop-color="rgb(8.979797%, 8.641052%, 34.739685%)" offset="0.417969"/><stop stop-opacity="1" stop-color="rgb(9.091187%, 8.74939%, 35.171509%)" offset="0.421875"/><stop stop-opacity="1" stop-color="rgb(9.202576%, 8.856201%, 35.603333%)" offset="0.425781"/><stop stop-opacity="1" stop-color="rgb(9.313965%, 8.964539%, 36.035156%)" offset="0.429688"/><stop stop-opacity="1" stop-color="rgb(9.425354%, 9.07135%, 36.46698%)" offset="0.433594"/><stop stop-opacity="1" stop-color="rgb(9.538269%, 9.179688%, 36.898804%)" offset="0.4375"/><stop stop-opacity="1" stop-color="rgb(9.649658%, 9.286499%, 37.330627%)" offset="0.441406"/><stop stop-opacity="1" stop-color="rgb(9.761047%, 9.394836%, 37.762451%)" offset="0.445313"/><stop stop-opacity="1" stop-color="rgb(9.872437%, 9.501648%, 38.194275%)" offset="0.449219"/><stop stop-opacity="1" stop-color="rgb(9.983826%, 9.609985%, 38.626099%)" offset="0.453125"/><stop stop-opacity="1" stop-color="rgb(10.095215%, 9.716797%, 39.057922%)" offset="0.457031"/><stop stop-opacity="1" stop-color="rgb(10.206604%, 9.823608%, 39.489746%)" offset="0.460937"/><stop stop-opacity="1" stop-color="rgb(10.317993%, 9.93042%, 39.92157%)" offset="0.464844"/><stop stop-opacity="1" stop-color="rgb(10.430908%, 10.038757%, 40.354919%)" offset="0.46875"/><stop stop-opacity="1" stop-color="rgb(10.542297%, 10.145569%, 40.786743%)" offset="0.472656"/><stop stop-opacity="1" stop-color="rgb(10.653687%, 10.253906%, 41.218567%)" offset="0.476562"/><stop stop-opacity="1" stop-color="rgb(10.765076%, 10.360718%, 41.650391%)" offset="0.480469"/><stop stop-opacity="1" stop-color="rgb(10.876465%, 10.469055%, 42.082214%)" offset="0.484375"/><stop stop-opacity="1" stop-color="rgb(10.987854%, 10.575867%, 42.514038%)" offset="0.488281"/><stop stop-opacity="1" stop-color="rgb(11.100769%, 10.684204%, 42.945862%)" offset="0.492188"/><stop stop-opacity="1" stop-color="rgb(11.212158%, 10.791016%, 43.377686%)" offset="0.496094"/><stop stop-opacity="1" stop-color="rgb(11.323547%, 10.897827%, 43.809509%)" offset="0.5"/><stop stop-opacity="1" stop-color="rgb(11.434937%, 11.004639%, 44.241333%)" offset="0.503906"/><stop stop-opacity="1" stop-color="rgb(11.546326%, 11.112976%, 44.673157%)" offset="0.507812"/><stop stop-opacity="1" stop-color="rgb(11.657715%, 11.219788%, 45.10498%)" offset="0.511719"/><stop stop-opacity="1" stop-color="rgb(11.77063%, 11.328125%, 45.536804%)" offset="0.515625"/><stop stop-opacity="1" stop-color="rgb(11.882019%, 11.434937%, 45.968628%)" offset="0.519531"/><stop stop-opacity="1" stop-color="rgb(11.993408%, 11.543274%, 46.400452%)" offset="0.523437"/><stop stop-opacity="1" stop-color="rgb(12.104797%, 11.650085%, 46.832275%)" offset="0.527344"/><stop stop-opacity="1" stop-color="rgb(12.216187%, 11.758423%, 47.264099%)" offset="0.53125"/><stop stop-opacity="1" stop-color="rgb(12.327576%, 11.865234%, 47.695923%)" offset="0.535156"/><stop stop-opacity="1" stop-color="rgb(12.440491%, 11.973572%, 48.127747%)" offset="0.539062"/><stop stop-opacity="1" stop-color="rgb(12.55188%, 12.080383%, 48.55957%)" offset="0.542969"/><stop stop-opacity="1" stop-color="rgb(12.663269%, 12.187195%, 48.991394%)" offset="0.546875"/><stop stop-opacity="1" stop-color="rgb(12.774658%, 12.294006%, 49.423218%)" offset="0.550781"/><stop stop-opacity="1" stop-color="rgb(12.886047%, 12.402344%, 49.855042%)" offset="0.554688"/><stop stop-opacity="1" stop-color="rgb(12.997437%, 12.509155%, 50.286865%)" offset="0.558594"/><stop stop-opacity="1" stop-color="rgb(13.108826%, 12.617493%, 50.718689%)" offset="0.5625"/><stop stop-opacity="1" stop-color="rgb(13.220215%, 12.724304%, 51.150513%)" offset="0.566406"/><stop stop-opacity="1" stop-color="rgb(13.33313%, 12.832642%, 51.582336%)" offset="0.570312"/><stop stop-opacity="1" stop-color="rgb(13.444519%, 12.939453%, 52.01416%)" offset="0.574219"/><stop stop-opacity="1" stop-color="rgb(13.555908%, 13.047791%, 52.445984%)" offset="0.578125"/><stop stop-opacity="1" stop-color="rgb(13.667297%, 13.154602%, 52.877808%)" offset="0.582031"/><stop stop-opacity="1" stop-color="rgb(13.778687%, 13.261414%, 53.309631%)" offset="0.585938"/><stop stop-opacity="1" stop-color="rgb(13.890076%, 13.368225%, 53.741455%)" offset="0.589844"/><stop stop-opacity="1" stop-color="rgb(14.002991%, 13.476562%, 54.173279%)" offset="0.59375"/><stop stop-opacity="1" stop-color="rgb(14.11438%, 13.583374%, 54.605103%)" offset="0.597656"/><stop stop-opacity="1" stop-color="rgb(14.225769%, 13.691711%, 55.036926%)" offset="0.601562"/><stop stop-opacity="1" stop-color="rgb(14.337158%, 13.798523%, 55.46875%)" offset="0.605469"/><stop stop-opacity="1" stop-color="rgb(14.448547%, 13.90686%, 55.900574%)" offset="0.609375"/><stop stop-opacity="1" stop-color="rgb(14.559937%, 14.013672%, 56.332397%)" offset="0.613281"/><stop stop-opacity="1" stop-color="rgb(14.672852%, 14.122009%, 56.764221%)" offset="0.617187"/><stop stop-opacity="1" stop-color="rgb(14.784241%, 14.228821%, 57.196045%)" offset="0.621094"/><stop stop-opacity="1" stop-color="rgb(14.89563%, 14.337158%, 57.627869%)" offset="0.625"/><stop stop-opacity="1" stop-color="rgb(15.007019%, 14.44397%, 58.059692%)" offset="0.628906"/><stop stop-opacity="1" stop-color="rgb(15.118408%, 14.550781%, 58.491516%)" offset="0.632812"/><stop stop-opacity="1" stop-color="rgb(15.229797%, 14.657593%, 58.92334%)" offset="0.636719"/><stop stop-opacity="1" stop-color="rgb(15.342712%, 14.76593%, 59.355164%)" offset="0.640625"/><stop stop-opacity="1" stop-color="rgb(15.454102%, 14.872742%, 59.786987%)" offset="0.644531"/><stop stop-opacity="1" stop-color="rgb(15.565491%, 14.981079%, 60.218811%)" offset="0.648438"/><stop stop-opacity="1" stop-color="rgb(15.67688%, 15.087891%, 60.650635%)" offset="0.652344"/><stop stop-opacity="1" stop-color="rgb(15.788269%, 15.196228%, 61.082458%)" offset="0.65625"/><stop stop-opacity="1" stop-color="rgb(15.899658%, 15.30304%, 61.514282%)" offset="0.660156"/><stop stop-opacity="1" stop-color="rgb(16.011047%, 15.411377%, 61.946106%)" offset="0.664062"/><stop stop-opacity="1" stop-color="rgb(16.122437%, 15.518188%, 62.37793%)" offset="0.667969"/><stop stop-opacity="1" stop-color="rgb(16.235352%, 15.625%, 62.809753%)" offset="0.671875"/><stop stop-opacity="1" stop-color="rgb(16.346741%, 15.731812%, 63.241577%)" offset="0.675781"/><stop stop-opacity="1" stop-color="rgb(16.45813%, 15.840149%, 63.673401%)" offset="0.679687"/><stop stop-opacity="1" stop-color="rgb(16.569519%, 15.94696%, 64.105225%)" offset="0.683594"/><stop stop-opacity="1" stop-color="rgb(16.680908%, 16.055298%, 64.537048%)" offset="0.6875"/><stop stop-opacity="1" stop-color="rgb(16.792297%, 16.162109%, 64.968872%)" offset="0.691406"/><stop stop-opacity="1" stop-color="rgb(16.905212%, 16.270447%, 65.400696%)" offset="0.695312"/><stop stop-opacity="1" stop-color="rgb(17.016602%, 16.377258%, 65.83252%)" offset="0.699219"/><stop stop-opacity="1" stop-color="rgb(17.127991%, 16.485596%, 66.264343%)" offset="0.703125"/><stop stop-opacity="1" stop-color="rgb(17.23938%, 16.592407%, 66.696167%)" offset="0.707031"/><stop stop-opacity="1" stop-color="rgb(17.350769%, 16.699219%, 67.127991%)" offset="0.710938"/><stop stop-opacity="1" stop-color="rgb(17.462158%, 16.80603%, 67.559814%)" offset="0.714844"/><stop stop-opacity="1" stop-color="rgb(17.575073%, 16.914368%, 67.991638%)" offset="0.71875"/><stop stop-opacity="1" stop-color="rgb(17.686462%, 17.021179%, 68.423462%)" offset="0.722656"/><stop stop-opacity="1" stop-color="rgb(17.797852%, 17.129517%, 68.855286%)" offset="0.726562"/><stop stop-opacity="1" stop-color="rgb(17.909241%, 17.236328%, 69.287109%)" offset="0.730469"/><stop stop-opacity="1" stop-color="rgb(18.02063%, 17.344666%, 69.718933%)" offset="0.734375"/><stop stop-opacity="1" stop-color="rgb(18.132019%, 17.451477%, 70.150757%)" offset="0.738281"/><stop stop-opacity="1" stop-color="rgb(18.244934%, 17.559814%, 70.582581%)" offset="0.742187"/><stop stop-opacity="1" stop-color="rgb(18.356323%, 17.666626%, 71.014404%)" offset="0.746094"/><stop stop-opacity="1" stop-color="rgb(18.467712%, 17.774963%, 71.446228%)" offset="0.75"/><stop stop-opacity="1" stop-color="rgb(18.579102%, 17.881775%, 71.878052%)" offset="0.753906"/><stop stop-opacity="1" stop-color="rgb(18.690491%, 17.988586%, 72.309875%)" offset="0.757812"/><stop stop-opacity="1" stop-color="rgb(18.80188%, 18.095398%, 72.741699%)" offset="0.761719"/><stop stop-opacity="1" stop-color="rgb(18.914795%, 18.203735%, 73.173523%)" offset="0.765625"/><stop stop-opacity="1" stop-color="rgb(19.026184%, 18.310547%, 73.605347%)" offset="0.769531"/><stop stop-opacity="1" stop-color="rgb(19.137573%, 18.418884%, 74.03717%)" offset="0.773437"/><stop stop-opacity="1" stop-color="rgb(19.248962%, 18.525696%, 74.468994%)" offset="0.777344"/><stop stop-opacity="1" stop-color="rgb(19.360352%, 18.634033%, 74.900818%)" offset="0.78125"/><stop stop-opacity="1" stop-color="rgb(19.471741%, 18.740845%, 75.332642%)" offset="0.785156"/><stop stop-opacity="1" stop-color="rgb(19.58313%, 18.849182%, 75.764465%)" offset="0.789062"/><stop stop-opacity="1" stop-color="rgb(19.694519%, 18.955994%, 76.196289%)" offset="0.792969"/><stop stop-opacity="1" stop-color="rgb(19.807434%, 19.062805%, 76.628113%)" offset="0.796875"/><stop stop-opacity="1" stop-color="rgb(19.918823%, 19.169617%, 77.059937%)" offset="0.800781"/><stop stop-opacity="1" stop-color="rgb(20.030212%, 19.277954%, 77.49176%)" offset="0.804687"/><stop stop-opacity="1" stop-color="rgb(20.141602%, 19.384766%, 77.923584%)" offset="0.808594"/><stop stop-opacity="1" stop-color="rgb(20.252991%, 19.493103%, 78.355408%)" offset="0.8125"/><stop stop-opacity="1" stop-color="rgb(20.36438%, 19.599915%, 78.787231%)" offset="0.816406"/><stop stop-opacity="1" stop-color="rgb(20.477295%, 19.708252%, 79.219055%)" offset="0.820312"/><stop stop-opacity="1" stop-color="rgb(20.588684%, 19.815063%, 79.650879%)" offset="0.824219"/><stop stop-opacity="1" stop-color="rgb(20.700073%, 19.923401%, 80.082703%)" offset="0.828125"/><stop stop-opacity="1" stop-color="rgb(20.739746%, 19.961548%, 80.235291%)" offset="0.84375"/><stop stop-opacity="1" stop-color="rgb(20.779419%, 19.999695%, 80.389404%)" offset="0.875"/><stop stop-opacity="1" stop-color="rgb(20.779419%, 19.999695%, 80.389404%)" offset="1"/></linearGradient><clipPath id="07a758d205"><rect x="0" width="810" y="0" height="810"/></clipPath><clipPath id="0d82fbe8eb"><rect x="0" width="810" y="0" height="810"/></clipPath><clipPath id="011ac8f2ec"><rect x="0" width="810" y="0" height="810"/></clipPath><mask id="ec653cd1b1"><g filter="url(#f05a5469c4)"><g transform="matrix(1, 0, 0, 1, 0, 0.000000000000039746)"><g clip-path="url(#011ac8f2ec)"><g transform="matrix(1, 0, 0, 1, 0, 0.000000000000039746)"><g clip-path="url(#0d82fbe8eb)"><g fill="#000000" fill-opacity="1"><g transform="translate(84.354906, 489.159942)"><g><path d="M 82.375 3.421875 C 57.601562 3.421875 38.375 -1.875 24.6875 -12.46875 C 11 -23.0625 4.15625 -37.804688 4.15625 -56.703125 L 70.15625 -56.703125 C 70.15625 -47.742188 74.390625 -43.265625 82.859375 -43.265625 C 90.191406 -43.265625 93.859375 -46.113281 93.859375 -51.8125 C 93.859375 -55.394531 91.941406 -58.207031 88.109375 -60.25 C 84.285156 -62.289062 77.566406 -64.039062 67.953125 -65.5 C 46.273438 -68.757812 30.425781 -74.582031 20.40625 -82.96875 C 10.382812 -91.363281 5.375 -103.304688 5.375 -118.796875 C 5.375 -136.222656 12.015625 -149.863281 25.296875 -159.71875 C 38.578125 -169.582031 56.867188 -174.515625 80.171875 -174.515625 C 103.796875 -174.515625 122.289062 -169.378906 135.65625 -159.109375 C 149.019531 -148.847656 156.109375 -134.265625 156.921875 -115.359375 L 92.875 -115.359375 C 92.875 -124.160156 88.800781 -128.5625 80.65625 -128.5625 C 73.320312 -128.5625 69.65625 -125.789062 69.65625 -120.25 C 69.65625 -116.664062 71.53125 -113.894531 75.28125 -111.9375 C 79.03125 -109.988281 85.875 -108.28125 95.8125 -106.8125 C 118.625 -103.382812 135.082031 -97.472656 145.1875 -89.078125 C 155.289062 -80.691406 160.34375 -68.757812 160.34375 -53.28125 C 160.34375 -35.519531 153.535156 -21.628906 139.921875 -11.609375 C 126.316406 -1.585938 107.132812 3.421875 82.375 3.421875 Z M 82.375 3.421875 "/></g></g></g><g fill="#000000" fill-opacity="1"><g transform="translate(232.459378, 489.159942)"><g><path d="M 11 0 L 11 -180.875 L 76.015625 -180.875 L 76.015625 -125.140625 C 80.742188 -128.234375 85.875 -130.59375 91.40625 -132.21875 C 96.945312 -133.851562 102.976562 -134.671875 109.5 -134.671875 C 125.957031 -134.671875 138.953125 -129.738281 148.484375 -119.875 C 158.015625 -110.019531 162.78125 -96.785156 162.78125 -80.171875 L 162.78125 0 L 97.765625 0 L 97.765625 -69.65625 C 97.765625 -78.945312 94.179688 -83.59375 87.015625 -83.59375 C 79.679688 -83.59375 76.015625 -78.867188 76.015625 -69.421875 L 76.015625 0 Z M 11 0 "/></g></g></g><g fill="#000000" fill-opacity="1"><g transform="translate(381.785333, 489.159942)"><g><path d="M 49.125 0 L 0.25 -131.25 L 69.65625 -131.25 L 78.703125 -91.90625 L 83.84375 -65.265625 L 86.03125 -65.265625 L 90.921875 -91.90625 L 99.96875 -131.25 L 168.890625 -131.25 L 120.25 0 Z M 49.125 0 "/></g></g></g><g fill="#000000" fill-opacity="1"><g transform="translate(534.044626, 489.159942)"><g><path d="M 11 0 L 11 -131.25 L 76.015625 -131.25 L 76.015625 0 Z M 7.328125 -177.453125 C 7.328125 -187.554688 10.585938 -195.742188 17.109375 -202.015625 C 23.628906 -208.285156 32.425781 -211.421875 43.5 -211.421875 C 54.582031 -211.421875 63.34375 -208.285156 69.78125 -202.015625 C 76.21875 -195.742188 79.4375 -187.554688 79.4375 -177.453125 C 79.4375 -167.515625 76.21875 -159.363281 69.78125 -153 C 63.34375 -146.644531 54.582031 -143.46875 43.5 -143.46875 C 32.425781 -143.46875 23.628906 -146.644531 17.109375 -153 C 10.585938 -159.363281 7.328125 -167.515625 7.328125 -177.453125 Z M 7.328125 -177.453125 "/></g></g></g><g fill="#000000" fill-opacity="1"><g transform="translate(603.940525, 489.159942)"><g><path d="M 11 0 L 11 -131.25 L 76.015625 -131.25 L 76.015625 0 Z M 7.328125 -177.453125 C 7.328125 -187.554688 10.585938 -195.742188 17.109375 -202.015625 C 23.628906 -208.285156 32.425781 -211.421875 43.5 -211.421875 C 54.582031 -211.421875 63.34375 -208.285156 69.78125 -202.015625 C 76.21875 -195.742188 79.4375 -187.554688 79.4375 -177.453125 C 79.4375 -167.515625 76.21875 -159.363281 69.78125 -153 C 63.34375 -146.644531 54.582031 -143.46875 43.5 -143.46875 C 32.425781 -143.46875 23.628906 -146.644531 17.109375 -153 C 10.585938 -159.363281 7.328125 -167.515625 7.328125 -177.453125 Z M 7.328125 -177.453125 "/></g></g></g></g></g></g></g></g></mask><clipPath id="f069cff865"><path d="M 0 0 L 810 0 L 810 810 L 0 810 Z M 0 0 " clip-rule="nonzero"/></clipPath><clipPath id="c1bfb59e7a"><rect x="0" width="810" y="0" height="810"/></clipPath><clipPath id="49636ef453"><rect x="0" width="810" y="0" height="810"/></clipPath><clipPath id="08faf060b4"><rect x="0" width="810" y="0" height="810"/></clipPath></defs><rect x="-81" width="972" fill="#ffffff" y="-80.999999" height="971.999992" fill-opacity="1"/><rect x="-81" width="972" fill="#ffffff" y="-80.999999" height="971.999992" fill-opacity="1"/><g transform="matrix(1, 0, 0, 1, 0, 0.000000000000039746)"><g clip-path="url(#08faf060b4)"><g transform="matrix(1, 0, 0, 1, 0, 0.000000000000039746)"><g clip-path="url(#49636ef453)"><g mask="url(#ec653cd1b1)"><g transform="matrix(1, 0, 0, 1, 0, 0.000000000000039746)"><g clip-path="url(#c1bfb59e7a)"><g clip-path="url(#f069cff865)"><rect x="-434.808" fill="url(#b2a821f5a5)" width="1679.616" height="1679.615985" y="-434.807996"/></g></g></g></g></g></g></g></g></svg>
+\ No newline at end of file
+diff --git a/jobs-ai-final/jobs-ai-final/shvii.svg b/jobs-ai-final/jobs-ai-final/shvii.svg
+new file mode 100644
+index 0000000..d9ea8fc
+--- /dev/null
++++ b/jobs-ai-final/jobs-ai-final/shvii.svg
+@@ -0,0 +1,4 @@
++<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" role="img" aria-label="Shvii logo">
++  <rect width="120" height="120" rx="18" fill="#0f172a"/>
++  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="34" fill="#ffdd57">Shvii</text>
++</svg>
+diff --git a/jobs-ai-final/jobs-ai-final/src/components/OAuthButton.tsx b/jobs-ai-final/jobs-ai-final/src/components/OAuthButton.tsx
+new file mode 100644
+index 0000000..085ff34
+--- /dev/null
++++ b/jobs-ai-final/jobs-ai-final/src/components/OAuthButton.tsx
+@@ -0,0 +1,43 @@
++import { supabase } from '../lib/supabase';
++
++type OAuthButtonProps = {
++  provider?: 'google';
++  className?: string;
++};
++
++export default function OAuthButton({ provider = 'google', className = '' }: OAuthButtonProps) {
++  const handleOAuth = async () => {
++    try {
++      // Redirect back to the app origin after OAuth flow. Supabase will complete the flow.
++      const redirectTo = window.location.origin;
++      const { error } = await supabase.auth.signInWithOAuth({
++        provider,
++        options: { redirectTo },
++      });
++
++      if (error) {
++        // show a simple error for now; app-level UI may display this better later
++        alert(error.message);
++      }
++    } catch (err: any) {
++      console.error('OAuth error', err);
++      alert(err?.message ?? 'OAuth failed');
++    }
++  };
++
++  return (
++    <button
++      type="button"
++      onClick={handleOAuth}
++      className={`w-full flex items-center justify-center gap-3 px-4 py-2 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-900 font-semibold ${className}`}
++    >
++      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-5 h-5">
++        <path fill="#fbc02d" d="M43.6 20.5H42V20H24v8h11.3C34.3 33.6 29.5 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.3 0 6.3 1.2 8.6 3.2l6.2-6.2C33.7 4.6 29 3 24 3 12.8 3 4 11.8 4 23s8.8 20 20 20c11.1 0 20-8 20-20 0-1.3-.1-2.6-.4-3.9z"/>
++        <path fill="#e53935" d="M6.3 14.7l6.6 4.8C15.2 15 19.2 12 24 12c3.3 0 6.3 1.2 8.6 3.2l6.2-6.2C33.7 4.6 29 3 24 3c-6.8 0-12.8 3.6-17 9.7z"/>
++        <path fill="#4caf50" d="M24 45c5 0 9.6-1.6 13.5-4.4l-6.4-5.3C29.9 35.8 27.1 37 24 37c-5.5 0-10.3-3.4-12-8.3L5.3 33.6C8.3 39.9 15.3 45 24 45z"/>
++        <path fill="#1565c0" d="M43.6 20.5H42V20H24v8h11.3c-1.2 3.5-3.6 6.4-6.6 8.3l.1-.1 6.1 5.1C39.9 39 44 32 44 24c0-1.3-.1-2.6-.4-3.9z"/>
++      </svg>
++      Continue with Google
++    </button>
++  );
++}
+diff --git a/jobs-ai-final/jobs-ai-final/src/pages/LandingPage.tsx b/jobs-ai-final/jobs-ai-final/src/pages/LandingPage.tsx
+new file mode 100644
+index 0000000..0da3aa4
+--- /dev/null
++++ b/jobs-ai-final/jobs-ai-final/src/pages/LandingPage.tsx
+@@ -0,0 +1,89 @@
++import { Link, useNavigate } from 'react-router-dom';
++import { useEffect } from 'react';
++import { Sparkles, FileText, Target, TrendingUp } from 'lucide-react';
++import { supabase } from '../lib/supabase';
++
++export default function LandingPage() {
++  const navigate = useNavigate();
++
++  useEffect(() => {
++    // If a user session exists (for example after OAuth redirect), send them to the dashboard
++    supabase.auth.getSession().then((res: any) => {
++      const session = (res && res.data && res.data.session) || null;
++      if (session) {
++        navigate('/dashboard');
++      }
++    });
++  }, [navigate]);
++  return (
++    <div className="min-h-screen bg-white">
++      <header className="border-b border-slate-200">
++        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
++          <div className="flex items-center space-x-2">
++            <Sparkles className="w-8 h-8 text-primary" />
++            <span className="text-2xl font-bold text-slate-900">Shvii</span>
++          </div>
++          <div className="space-x-4">
++            <Link to="/login" className="text-slate-700 hover:text-primary">
++              Login
++            </Link>
++            <Link
++              to="/signup"
++              className="bg-primary text-slate-900 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-500"
++            >
++              Get Started
++            </Link>
++          </div>
++        </div>
++      </header>
++
++      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
++        <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6">
++          Land Your Dream Job with <span className="text-primary">AI</span>
++        </h1>
++        <p className="text-xl text-slate-700 mb-8 max-w-3xl mx-auto">
++          Generate tailored cover letters, optimize your resume, and track applications—all powered by AI
++        </p>
++        <p className="mt-6 text-lg leading-8 text-slate-600">AI tools for job seekers — generate tailored resumes, smart cover letters, and manage applications. Visit <a href="https://www.shvii.ai" className="text-indigo-600 hover:underline">www.shvii.ai</a>.</p>
++        <Link
++          to="/signup"
++          className="inline-block bg-primary text-slate-900 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-yellow-500"
++        >
++          Start Free Trial
++        </Link>
++      </section>
++
++      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
++        <div className="grid md:grid-cols-3 gap-8">
++          <div className="bg-white shadow-sm border border-slate-200 p-8 rounded-xl">
++            <FileText className="w-12 h-12 text-primary mb-4" />
++            <h3 className="text-xl font-bold text-slate-900 mb-2">AI Cover Letters</h3>
++            <p className="text-slate-700">
++              Generate personalized cover letters in seconds, tailored to each job
++            </p>
++          </div>
++          <div className="bg-white shadow-sm border border-slate-200 p-8 rounded-xl">
++            <Target className="w-12 h-12 text-primary mb-4" />
++            <h3 className="text-xl font-bold text-slate-900 mb-2">Resume Analysis</h3>
++            <p className="text-slate-700">
++              Get instant feedback on your resume with AI-powered insights
++            </p>
++          </div>
++          <div className="bg-white shadow-sm border border-slate-200 p-8 rounded-xl">
++            <TrendingUp className="w-12 h-12 text-primary mb-4" />
++            <h3 className="text-xl font-bold text-slate-900 mb-2">Track Applications</h3>
++            <p className="text-slate-700">
++              Manage all your job applications in one organized dashboard
++            </p>
++          </div>
++        </div>
++      </section>
++
++      <footer className="border-t border-slate-200 mt-20">
++        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-slate-600">
++          <p>&copy; 2024 Shvii. All rights reserved. — www.shvii.ai</p>
++        </div>
++      </footer>
++    </div>
++  );
++}
+diff --git a/jobs-ai-final/jobs-ai-final/src/pages/Login.tsx b/jobs-ai-final/jobs-ai-final/src/pages/Login.tsx
+new file mode 100644
+index 0000000..c1f0b8a
+--- /dev/null
++++ b/jobs-ai-final/jobs-ai-final/src/pages/Login.tsx
+@@ -0,0 +1,104 @@
++import { useState } from 'react';
++import { Link, useNavigate } from 'react-router-dom';
++import { supabase } from '../lib/supabase';
++import OAuthButton from '../components/OAuthButton';
++import { Sparkles } from 'lucide-react';
++
++export default function Login() {
++  const [email, setEmail] = useState('');
++  const [password, setPassword] = useState('');
++  const [error, setError] = useState('');
++  const [loading, setLoading] = useState(false);
++  const navigate = useNavigate();
++
++  const handleLogin = async (e: React.FormEvent) => {
++    e.preventDefault();
++    setError('');
++    setLoading(true);
++
++    const { error } = await supabase.auth.signInWithPassword({
++      email,
++      password,
++    });
++
++    if (error) {
++      setError(error.message);
++      setLoading(false);
++    } else {
++      navigate('/dashboard');
++    }
++  };
++
++  return (
++  <div className="min-h-screen bg-white flex items-center justify-center px-4">
++      <div className="max-w-md w-full">
++        <div className="text-center mb-8">
++          <Link to="/" className="inline-flex items-center space-x-2">
++            <Sparkles className="w-10 h-10 text-primary" />
++            <span className="text-3xl font-bold text-slate-900">Shvii</span>
++          </Link>
++          <h2 className="mt-6 text-2xl font-bold text-slate-900">Sign in to Shvii</h2>
++        </div>
++
++  <div className="bg-white shadow-sm border border-slate-200 p-8 rounded-xl">
++          <div className="mb-4">
++            <OAuthButton />
++          </div>
++          <div className="flex items-center gap-3 my-3">
++            <div className="flex-1 h-[1px] bg-slate-200" />
++            <div className="text-sm text-slate-600">or</div>
++            <div className="flex-1 h-[1px] bg-slate-200" />
++          </div>
++          <form onSubmit={handleLogin} className="space-y-6">
++            {error && (
++              <div className="bg-red-500/10 border border-red-500 text-red-500 px-4 py-3 rounded">
++                {error}
++              </div>
++            )}
++
++            <div>
++              <label className="block text-sm font-medium text-slate-700 mb-2">
++                Email
++              </label>
++              <input
++                type="email"
++                value={email}
++                onChange={(e) => setEmail(e.target.value)}
++                className="w-full px-4 py-2 bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
++                required
++              />
++            </div>
++
++            <div>
++              <label className="block text-sm font-medium text-slate-700 mb-2">
++                Password
++              </label>
++              <input
++                type="password"
++                value={password}
++                onChange={(e) => setPassword(e.target.value)}
++                className="w-full px-4 py-2 bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
++                required
++              />
++            </div>
++
++            <button
++              type="submit"
++              disabled={loading}
++              className="w-full bg-primary text-slate-900 py-3 rounded-lg font-semibold hover:bg-yellow-500 disabled:opacity-50"
++            >
++              {loading ? 'Signing in...' : 'Sign in'}
++            </button>
++          </form>
++
++          <p className="mt-6 text-center text-slate-700">
++            Don't have an account?{' '}
++            <Link to="/signup" className="text-primary hover:underline">
++              Sign up
++            </Link>
++          </p>
++        </div>
++      </div>
++    </div>
++  );
++}
+diff --git a/jobs-ai-final/jobs-ai-final/src/pages/Signup.tsx b/jobs-ai-final/jobs-ai-final/src/pages/Signup.tsx
+new file mode 100644
+index 0000000..6b76c96
+--- /dev/null
++++ b/jobs-ai-final/jobs-ai-final/src/pages/Signup.tsx
+@@ -0,0 +1,139 @@
++import { useState } from 'react';
++import { Link, useNavigate } from 'react-router-dom';
++import { supabase } from '../lib/supabase';
++import OAuthButton from '../components/OAuthButton';
++import { Sparkles } from 'lucide-react';
++
++export default function Signup() {
++  const [email, setEmail] = useState('');
++  const [password, setPassword] = useState('');
++  const [fullName, setFullName] = useState('');
++  const [error, setError] = useState('');
++  const [loading, setLoading] = useState(false);
++  const navigate = useNavigate();
++
++  const handleSignup = async (e: React.FormEvent) => {
++    e.preventDefault();
++    setError('');
++    setLoading(true);
++
++    const { data, error: signUpError } = await supabase.auth.signUp({
++      email,
++      password,
++      options: {
++        data: {
++          full_name: fullName,
++        },
++      },
++    });
++
++    if (signUpError) {
++      setError(signUpError.message);
++      setLoading(false);
++    } else if (data.user) {
++      const { error: profileError } = await supabase
++        .from('users')
++        .insert([
++          {
++            id: data.user.id,
++            email: email,
++            full_name: fullName,
++            subscription_tier: 'free',
++          },
++        ]);
++
++      if (profileError) {
++        console.error('Profile creation error:', profileError);
++      }
++
++      navigate('/dashboard');
++    }
++  };
++
++  return (
++  <div className="min-h-screen bg-white flex items-center justify-center px-4">
++      <div className="max-w-md w-full">
++        <div className="text-center mb-8">
++          <Link to="/" className="inline-flex items-center space-x-2">
++            <Sparkles className="w-10 h-10 text-primary" />
++            <span className="text-3xl font-bold text-slate-900">Shvii</span>
++          </Link>
++          <h2 className="mt-6 text-2xl font-bold text-slate-900">Create your account</h2>
++        </div>
++
++  <div className="bg-white shadow-sm border border-slate-200 p-8 rounded-xl">
++          <div className="mb-4">
++            <OAuthButton />
++          </div>
++          <div className="flex items-center gap-3 my-3">
++            <div className="flex-1 h-[1px] bg-slate-200" />
++            <div className="text-sm text-slate-600">or</div>
++            <div className="flex-1 h-[1px] bg-slate-200" />
++          </div>
++          <form onSubmit={handleSignup} className="space-y-6">
++            {error && (
++              <div className="bg-red-500/10 border border-red-500 text-red-500 px-4 py-3 rounded">
++                {error}
++              </div>
++            )}
++
++            <div>
++              <label className="block text-sm font-medium text-slate-700 mb-2">
++                Full Name
++              </label>
++              <input
++                type="text"
++                value={fullName}
++                onChange={(e) => setFullName(e.target.value)}
++                className="w-full px-4 py-2 bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
++                required
++              />
++            </div>
++
++            <div>
++              <label className="block text-sm font-medium text-slate-700 mb-2">
++                Email
++              </label>
++              <input
++                type="email"
++                value={email}
++                onChange={(e) => setEmail(e.target.value)}
++                className="w-full px-4 py-2 bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
++                required
++              />
++            </div>
++
++            <div>
++              <label className="block text-sm font-medium text-slate-700 mb-2">
++                Password
++              </label>
++              <input
++                type="password"
++                value={password}
++                onChange={(e) => setPassword(e.target.value)}
++                className="w-full px-4 py-2 bg-white border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
++                required
++                minLength={6}
++              />
++            </div>
++
++            <button
++              type="submit"
++              disabled={loading}
++              className="w-full bg-primary text-slate-900 py-3 rounded-lg font-semibold hover:bg-yellow-500 disabled:opacity-50"
++            >
++              {loading ? 'Creating account...' : 'Create account'}
++            </button>
++          </form>
++
++          <p className="mt-6 text-center text-slate-700">
++            Already have an account?{' '}
++            <Link to="/login" className="text-primary hover:underline">
++              Sign in
++            </Link>
++          </p>
++        </div>
++      </div>
++    </div>
++  );
++}
+-- 
+2.50.1
+
+
+From aea481aecb45206c7c6a040692384108e77b2f66 Mon Sep 17 00:00:00 2001
+From: sanjayt19 <65835503+sanjayt19@users.noreply.github.com>
+Date: Mon, 10 Nov 2025 02:33:35 +0000
+Subject: [PATCH 2/6] chore(rebrand): add favicon size links and theme-color
+
+---
+ jobs-ai-final/jobs-ai-final/index.html | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/jobs-ai-final/jobs-ai-final/index.html b/jobs-ai-final/jobs-ai-final/index.html
+index 7d2cc64..8b045bb 100644
+--- a/jobs-ai-final/jobs-ai-final/index.html
++++ b/jobs-ai-final/jobs-ai-final/index.html
+@@ -3,7 +3,10 @@
+   <head>
+     <meta charset="UTF-8" />
+   <link rel="icon" type="image/png" href="/favicon-108.png" />
++  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-108.png" />
++  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-108.png" />
+   <link rel="apple-touch-icon" href="/shvii-logo.png" />
++  <meta name="theme-color" content="#ffffff" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>Shvii — AI tools for job seekers</title>
+   <meta name="description" content="Shvii helps job seekers generate cover letters, optimize resumes, and track applications with AI. Visit www.shvii.ai" />
+-- 
+2.50.1
+
+
+From 28ce8fffcd3d284029450fa251fbbf230324ae8e Mon Sep 17 00:00:00 2001
+From: sanjayt19 <65835503+sanjayt19@users.noreply.github.com>
+Date: Mon, 10 Nov 2025 03:02:39 +0000
+Subject: [PATCH 3/6] chore(rebrand): add favicon variants and update index
+ links
+
+---
+ jobs-ai-final/jobs-ai-final/index.html          |   8 ++++----
+ .../jobs-ai-final/public/apple-touch-icon.png   | Bin 0 -> 174 bytes
+ .../jobs-ai-final/public/favicon-16x16.png      | Bin 0 -> 148 bytes
+ .../jobs-ai-final/public/favicon-32x32.png      | Bin 0 -> 149 bytes
+ .../jobs-ai-final/public/favicon-48x48.png      | Bin 0 -> 150 bytes
+ jobs-ai-final/jobs-ai-final/public/favicon.ico  | Bin 0 -> 10054 bytes
+ 6 files changed, 4 insertions(+), 4 deletions(-)
+ create mode 100644 jobs-ai-final/jobs-ai-final/public/apple-touch-icon.png
+ create mode 100644 jobs-ai-final/jobs-ai-final/public/favicon-16x16.png
+ create mode 100644 jobs-ai-final/jobs-ai-final/public/favicon-32x32.png
+ create mode 100644 jobs-ai-final/jobs-ai-final/public/favicon-48x48.png
+ create mode 100644 jobs-ai-final/jobs-ai-final/public/favicon.ico
+
+diff --git a/jobs-ai-final/jobs-ai-final/index.html b/jobs-ai-final/jobs-ai-final/index.html
+index 8b045bb..0e1d923 100644
+--- a/jobs-ai-final/jobs-ai-final/index.html
++++ b/jobs-ai-final/jobs-ai-final/index.html
+@@ -2,10 +2,10 @@
+ <html lang="en">
+   <head>
+     <meta charset="UTF-8" />
+-  <link rel="icon" type="image/png" href="/favicon-108.png" />
+-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-108.png" />
+-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-108.png" />
+-  <link rel="apple-touch-icon" href="/shvii-logo.png" />
++  <link rel="apple-touch-icon" sizes="180x180" href="/jobs-ai-final/public/apple-touch-icon.png" />
++  <link rel="icon" type="image/png" sizes="32x32" href="/jobs-ai-final/public/favicon-32x32.png" />
++  <link rel="icon" type="image/png" sizes="16x16" href="/jobs-ai-final/public/favicon-16x16.png" />
++  <link rel="shortcut icon" href="/jobs-ai-final/public/favicon.ico" />
+   <meta name="theme-color" content="#ffffff" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>Shvii — AI tools for job seekers</title>
+diff --git a/jobs-ai-final/jobs-ai-final/public/apple-touch-icon.png b/jobs-ai-final/jobs-ai-final/public/apple-touch-icon.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..f985d273c8168d61c602985f6c25e9b6dcc3d450
+GIT binary patch
+literal 174
+zcmeAS@N?(olHy`uVBq!ia0vp^TR@l*NHB<Qvz`y66p}rHd>I(3)EF2VS{N990fib~
+zFff!FFfhDIU|_JC!N4G1FlSew4N!t9$=lt9f$?sa@Dd=8y~NYkmHj0*7c-;j3YjX9
+zkcOv=V@Sl|w<ipF85lU2H~b9mW=>;ZR(X5#P3EJ$-|tnw2ND0DaJyv*Szao>^#rJg
+N!PC{xWt~$(6969-Gq?Z%
+
+literal 0
+HcmV?d00001
+
+diff --git a/jobs-ai-final/jobs-ai-final/public/favicon-16x16.png b/jobs-ai-final/jobs-ai-final/public/favicon-16x16.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..d39b9be9e9d9c1b3abc944959141cbf7872b2b60
+GIT binary patch
+literal 148
+zcmeAS@N?(olHy`uVBq!ia0vp^0wBx?BpA#)4xIr~3dtTpz6=aiY77hwEes65fI<x~
+z7#K<o7#Ln9FfdrnU|<k0n6oR;1}MRl<n8Xlz<9SycnOflUgGKN%Knm@i<!~nzO<JS
+pP>9dd#W95Adh(C|^BYB282<XnKP>KEwgxD};OXk;vd$@?2>|itBzFJ+
+
+literal 0
+HcmV?d00001
+
+diff --git a/jobs-ai-final/jobs-ai-final/public/favicon-32x32.png b/jobs-ai-final/jobs-ai-final/public/favicon-32x32.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..c987467858f22eeefd5416ca512375ff5f8779b3
+GIT binary patch
+literal 149
+zcmeAS@N?(olHy`uVBq!ia0vp^3Lwk~Bp9L@-6KJqWRD<U28Jp%28M<f28Lfip@tU>
+z45bDP46hOx7_4S6Fo+k-*%fF5lweBoc6VW5yxS$b1ju7A@$_|Nf62|o%xLUbe}5uS
+ph~Lx2F@)oK@(+F%p62Nc47Xm^H%<=;m;#hy@O1TaS?83{1OSDbBKZIS
+
+literal 0
+HcmV?d00001
+
+diff --git a/jobs-ai-final/jobs-ai-final/public/favicon-48x48.png b/jobs-ai-final/jobs-ai-final/public/favicon-48x48.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..17467b3818934ed03ca83531079f2346fe8992f2
+GIT binary patch
+literal 150
+zcmeAS@N?(olHy`uVBq!ia0vp^1|ZA`BpB)|k7xlYg=CK)Uj~LMH3o);76yi2K%s^g
+z3=E|}g|8AA7_4S6Fo+k-*%fF5lweBoc6VW5yxS$b1ju7A@$_|Nf62|o%xGj*@tz$h
+qB;e`d7$R{w`3FB6&tj2M4F>-Zxew=sXGs9%7(8A5T-G@yGywqi>LPLg
+
+literal 0
+HcmV?d00001
+
+diff --git a/jobs-ai-final/jobs-ai-final/public/favicon.ico b/jobs-ai-final/jobs-ai-final/public/favicon.ico
+new file mode 100644
+index 0000000000000000000000000000000000000000..a7023318b8a9efbd64bceaef3bf95a501cf45924
+GIT binary patch
+literal 10054
+zcmeI0Jr06E5QQK9^c(>jW62S$Jc6~Q$M8rN9LOV3+2R}4HEXmmG{oea<n6Eo$mE;1
+zQy^7Zsje5!m9CNwR@0<?TS<5C+xEF%O526hb!p#kq~luJ`I$Q2v*J4u`*BT+Ur{Jx
+z7zQiybfqs%U!&f}+FQBai?4Hh*6XTgj9k}TIe4|!$$IfhZT6ki+xPwktg+YR890nh
+zVVR9UoR`iz`;6rCa*F}^jNj%<AG7jHa6dtT102fZfgkV#ekcjxhmr>K0YBh}k^p`v
+vX)qt~1AZt8;D?e1^I@tV@_!F91Rwwb2tWV=5P$##AOHafKmY;|_*ViCx4!4Y
+
+literal 0
+HcmV?d00001
+
+-- 
+2.50.1
+
+
+From 80783c68b4ee26799cdb342b027eff566de1a80b Mon Sep 17 00:00:00 2001
+From: sanjayt19 <65835503+sanjayt19@users.noreply.github.com>
+Date: Mon, 10 Nov 2025 03:07:36 +0000
+Subject: [PATCH 4/6] chore(rebrand): add rebrand-preview.html for visualizing
+ color palettes
+
+---
+ jobs-ai-final/rebrand-preview.html | 128 +++++++++++++++++++++++++++++
+ 1 file changed, 128 insertions(+)
+ create mode 100644 jobs-ai-final/rebrand-preview.html
+
+diff --git a/jobs-ai-final/rebrand-preview.html b/jobs-ai-final/rebrand-preview.html
+new file mode 100644
+index 0000000..6fbb07d
+--- /dev/null
++++ b/jobs-ai-final/rebrand-preview.html
+@@ -0,0 +1,128 @@
++<!doctype html>
++<html lang="en">
++<head>
++  <meta charset="utf-8" />
++  <meta name="viewport" content="width=device-width,initial-scale=1" />
++  <title>Shvii — Rebrand color preview</title>
++  <style>
++    body{font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin:32px; background:#fff; color:#0f172a}
++    .wrap{max-width:980px;margin:0 auto}
++    h1{font-size:28px;margin-bottom:8px}
++    h2{font-size:18px;margin:18px 0 8px}
++    .palette{display:flex;gap:12px;margin:12px 0}
++    .sw{width:96px;height:96px;border-radius:8px;display:flex;align-items:flex-end;padding:8px;color:#fff;font-weight:700}
++    .sw-label{font-size:13px;text-align:center;margin-top:8px;color:#374151}
++    .example{border:1px solid #e6eef8;padding:18px;border-radius:8px;margin-top:12px;background:#fff}
++    .btn{display:inline-block;padding:10px 18px;border-radius:8px;font-weight:600;text-decoration:none}
++    .card{padding:14px;border-radius:10px;box-shadow:0 4px 10px rgba(2,6,23,0.06);margin-top:10px}
++    .row{display:flex;gap:18px;align-items:center}
++  </style>
++</head>
++<body>
++  <div class="wrap">
++    <h1>Shvii — Rebrand preview</h1>
++    <p>Below are three color palette options. Each shows swatches and small UI examples (button, link, card). To view the changes in your local dev server run <code>npm run dev</code> then open <code>http://localhost:5173/rebrand-preview.html</code>.</p>
++
++    <h2>Option A — Warm Gold (recommended)</h2>
++    <div class="palette">
++      <div>
++        <div class="sw" style="background:#FFDD57;color:#111827">Primary<br>#FFDD57</div>
++        <div class="sw-label">Primary</div>
++      </div>
++      <div>
++        <div class="sw" style="background:#F2C94C;color:#111827">Primary-600<br>#F2C94C</div>
++        <div class="sw-label">Hover</div>
++      </div>
++      <div>
++        <div class="sw" style="background:#0F172A">Text<br>#0F172A</div>
++        <div class="sw-label">Text</div>
++      </div>
++      <div>
++        <div class="sw" style="background:#F1F5F9;color:#0f172a">Subtle<br>#F1F5F9</div>
++        <div class="sw-label">Subtle / BG</div>
++      </div>
++    </div>
++    <div class="example">
++      <div class="row">
++        <a class="btn" href="#" style="background:#FFDD57;color:#0f172a">Primary CTA</a>
++        <a class="btn" href="#" style="background:#ffffff;color:#0F172A;border:1px solid #E6E9EE">Ghost</a>
++        <a href="#" style="color:#FFDD57;font-weight:600">Link</a>
++      </div>
++      <div class="card" style="background:#fff;border:1px solid #F1F5F9">
++        <h3 style="margin:0;color:#0F172A">Card title</h3>
++        <p style="margin:8px 0 0;color:#5B6470">Muted paragraph text — example body copy for the warm gold theme.</p>
++      </div>
++    </div>
++
++    <h2>Option B — Calm Indigo</h2>
++    <div class="palette">
++      <div>
++        <div class="sw" style="background:#4F46E5">Primary<br>#4F46E5</div>
++        <div class="sw-label">Primary</div>
++      </div>
++      <div>
++        <div class="sw" style="background:#4338CA">Hover<br>#4338CA</div>
++        <div class="sw-label">Hover</div>
++      </div>
++      <div>
++        <div class="sw" style="background:#0F172A">Text<br>#0F172A</div>
++        <div class="sw-label">Text</div>
++      </div>
++      <div>
++        <div class="sw" style="background:#F8FAFC;color:#0f172a">Subtle<br>#F8FAFC</div>
++        <div class="sw-label">Subtle / BG</div>
++      </div>
++    </div>
++    <div class="example">
++      <div class="row">
++        <a class="btn" href="#" style="background:#4F46E5;color:white">Primary CTA</a>
++        <a class="btn" href="#" style="background:#ffffff;color:#4F46E5;border:1px solid #E9EEF9">Ghost</a>
++        <a href="#" style="color:#4F46E5;font-weight:600">Link</a>
++      </div>
++      <div class="card" style="background:#fff;border:1px solid #F8FAFC">
++        <h3 style="margin:0;color:#0F172A">Card title</h3>
++        <p style="margin:8px 0 0;color:#6B7280">Muted paragraph text — example body copy for the indigo theme.</p>
++      </div>
++    </div>
++
++    <h2>Option C — Fresh Teal</h2>
++    <div class="palette">
++      <div>
++        <div class="sw" style="background:#0ABAB5">Primary<br>#0ABAB5</div>
++        <div class="sw-label">Primary</div>
++      </div>
++      <div>
++        <div class="sw" style="background:#059E99">Hover<br>#059E99</div>
++        <div class="sw-label">Hover</div>
++      </div>
++      <div>
++        <div class="sw" style="background:#111827">Text<br>#111827</div>
++        <div class="sw-label">Text</div>
++      </div>
++      <div>
++        <div class="sw" style="background:#F6F9FA;color:#0f172a">Subtle<br>#F6F9FA</div>
++        <div class="sw-label">Subtle / BG</div>
++      </div>
++    </div>
++    <div class="example">
++      <div class="row">
++        <a class="btn" href="#" style="background:#0ABAB5;color:white">Primary CTA</a>
++        <a class="btn" href="#" style="background:#ffffff;color:#0ABAB5;border:1px solid #EAF7F6">Ghost</a>
++        <a href="#" style="color:#0ABAB5;font-weight:600">Link</a>
++      </div>
++      <div class="card" style="background:#fff;border:1px solid #F6F9FA">
++        <h3 style="margin:0;color:#111827">Card title</h3>
++        <p style="margin:8px 0 0;color:#6B7280">Muted paragraph text — example body copy for the teal theme.</p>
++      </div>
++    </div>
++
++    <h2>How to view</h2>
++    <ol>
++      <li>Locally: run <code>cd jobs-ai-final && npm run dev</code> and open <code>http://localhost:5173/rebrand-preview.html</code>.</li>
++      <li>PR / Preview: if Vercel is connected, the branch <code>feature/rebrand-shvii-clean</code> may have a preview deployment — open the PR and click the Vercel preview link.</li>
++      <li>If you want, I can also apply the chosen palette to the site and push updates directly to the PR branch.</li>
++    </ol>
++
++  </div>
++</body>
++</html>
+-- 
+2.50.1
+
+
+From ab8efaa5cd878be0dcf058be990aff5b15aeeaef Mon Sep 17 00:00:00 2001
+From: sanjayt19 <65835503+sanjayt19@users.noreply.github.com>
+Date: Mon, 10 Nov 2025 04:03:06 +0000
+Subject: [PATCH 5/6] chore(rebrand): apply light theme and indigo primary to
+ Signup page
+
+---
+ jobs-ai-final/src/pages/Signup.tsx | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/jobs-ai-final/src/pages/Signup.tsx b/jobs-ai-final/src/pages/Signup.tsx
+index d4b1e82..53768d5 100644
+--- a/jobs-ai-final/src/pages/Signup.tsx
++++ b/jobs-ai-final/src/pages/Signup.tsx
+@@ -51,24 +51,24 @@ export default function Signup() {
+   };
+ 
+   return (
+-    <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4">
++    <div className="min-h-screen bg-white flex items-center justify-center px-4 text-slate-900">
+       <div className="max-w-md w-full">
+         <div className="text-center mb-8">
+           <Link to="/" className="inline-flex items-center space-x-2">
+             <Sparkles className="w-10 h-10 text-primary" />
+-            <span className="text-3xl font-bold text-white">Jobs.AI</span>
++            <span className="text-3xl font-bold">Shvii</span>
+           </Link>
+-          <h2 className="mt-6 text-2xl font-bold text-white">Create your account</h2>
++          <h2 className="mt-6 text-2xl font-bold">Create your account</h2>
+         </div>
+ 
+-        <div className="bg-slate-800 p-8 rounded-xl">
++        <div className="bg-white p-8 rounded-xl border border-gray-100 shadow-sm">
+           <div className="mb-4">
+             <OAuthButton />
+           </div>
+           <div className="flex items-center gap-3 my-3">
+-            <div className="flex-1 h-[1px] bg-slate-700" />
+-            <div className="text-sm text-slate-400">or</div>
+-            <div className="flex-1 h-[1px] bg-slate-700" />
++            <div className="flex-1 h-[1px] bg-gray-200" />
++            <div className="text-sm text-gray-400">or</div>
++            <div className="flex-1 h-[1px] bg-gray-200" />
+           </div>
+           <form onSubmit={handleSignup} className="space-y-6">
+             {error && (
+@@ -78,40 +78,40 @@ export default function Signup() {
+             )}
+ 
+             <div>
+-              <label className="block text-sm font-medium text-slate-300 mb-2">
++              <label className="block text-sm font-medium text-slate-700 mb-2">
+                 Full Name
+               </label>
+               <input
+                 type="text"
+                 value={fullName}
+                 onChange={(e) => setFullName(e.target.value)}
+-                className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-primary"
++                className="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
+                 required
+               />
+             </div>
+ 
+             <div>
+-              <label className="block text-sm font-medium text-slate-300 mb-2">
++              <label className="block text-sm font-medium text-slate-700 mb-2">
+                 Email
+               </label>
+               <input
+                 type="email"
+                 value={email}
+                 onChange={(e) => setEmail(e.target.value)}
+-                className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-primary"
++                className="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
+                 required
+               />
+             </div>
+ 
+             <div>
+-              <label className="block text-sm font-medium text-slate-300 mb-2">
++              <label className="block text-sm font-medium text-slate-700 mb-2">
+                 Password
+               </label>
+               <input
+                 type="password"
+                 value={password}
+                 onChange={(e) => setPassword(e.target.value)}
+-                className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-primary"
++                className="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
+                 required
+                 minLength={6}
+               />
+@@ -120,13 +120,13 @@ export default function Signup() {
+             <button
+               type="submit"
+               disabled={loading}
+-              className="w-full bg-primary text-slate-900 py-3 rounded-lg font-semibold hover:bg-yellow-500 disabled:opacity-50"
++              className="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-primary-600 disabled:opacity-50"
+             >
+               {loading ? 'Creating account...' : 'Create account'}
+             </button>
+           </form>
+ 
+-          <p className="mt-6 text-center text-slate-400">
++          <p className="mt-6 text-center text-gray-600">
+             Already have an account?{' '}
+             <Link to="/login" className="text-primary hover:underline">
+               Sign in
+-- 
+2.50.1
+
+
+From 4ed74178a6a73ab61daa3a039ee958486d251940 Mon Sep 17 00:00:00 2001
+From: sanjayt19 <65835503+sanjayt19@users.noreply.github.com>
+Date: Mon, 10 Nov 2025 04:08:56 +0000
+Subject: [PATCH 6/6] chore(rebrand): sweep branding to Shvii, convert pages to
+ light theme, move favicons to public
+
+---
+ jobs-ai-final/README.md                       |   4 +-
+ jobs-ai-final/index.html                      |   7 ++-
+ .../node_modules/.vite/deps/_metadata.json    |  24 +++++------
+ .../public/apple-touch-icon.png               | Bin
+ .../public/favicon-108.png                    |   0
+ .../public/favicon-16x16.png                  | Bin
+ .../public/favicon-32x32.png                  | Bin
+ .../public/favicon-48x48.png                  | Bin
+ .../{jobs-ai-final => }/public/favicon.ico    | Bin
+ .../{jobs-ai-final => }/public/shvii-logo.png |   0
+ jobs-ai-final/src/pages/Dashboard.tsx         |  18 ++++----
+ jobs-ai-final/src/pages/LandingPage.tsx       |  40 +++++++++---------
+ jobs-ai-final/src/pages/Login.tsx             |  22 +++++-----
+ jobs-ai-final/tailwind.config.js              |   8 +++-
+ 14 files changed, 67 insertions(+), 56 deletions(-)
+ rename jobs-ai-final/{jobs-ai-final => }/public/apple-touch-icon.png (100%)
+ rename jobs-ai-final/{jobs-ai-final => }/public/favicon-108.png (100%)
+ rename jobs-ai-final/{jobs-ai-final => }/public/favicon-16x16.png (100%)
+ rename jobs-ai-final/{jobs-ai-final => }/public/favicon-32x32.png (100%)
+ rename jobs-ai-final/{jobs-ai-final => }/public/favicon-48x48.png (100%)
+ rename jobs-ai-final/{jobs-ai-final => }/public/favicon.ico (100%)
+ rename jobs-ai-final/{jobs-ai-final => }/public/shvii-logo.png (100%)
+
+diff --git a/jobs-ai-final/README.md b/jobs-ai-final/README.md
+index e5446ad..5aa658b 100644
+--- a/jobs-ai-final/README.md
++++ b/jobs-ai-final/README.md
+@@ -1,6 +1,6 @@
+-# Jobs.AI (frontend)
++# Shvii (frontend)
+ 
+-This folder contains the Vite + React frontend for Jobs.AI.
++This folder contains the Vite + React frontend for Shvii.
+ 
+ Local dev
+ 
+diff --git a/jobs-ai-final/index.html b/jobs-ai-final/index.html
+index c5360c5..c72872c 100644
+--- a/jobs-ai-final/index.html
++++ b/jobs-ai-final/index.html
+@@ -4,7 +4,12 @@
+     <meta charset="UTF-8" />
+     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+-    <title>Jobs.AI - AI-Powered Job Applications</title>
++    <title>Shvii - AI-Powered Job Applications</title>
++    <meta name="description" content="Shvii helps you generate tailored cover letters, optimize resumes, and track applications with AI." />
++    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
++    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
++    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
++    <link rel="shortcut icon" href="/favicon.ico" />
+   </head>
+   <body>
+     <div id="root"></div>
+diff --git a/jobs-ai-final/node_modules/.vite/deps/_metadata.json b/jobs-ai-final/node_modules/.vite/deps/_metadata.json
+index 268b5aa..b29e6a2 100644
+--- a/jobs-ai-final/node_modules/.vite/deps/_metadata.json
++++ b/jobs-ai-final/node_modules/.vite/deps/_metadata.json
+@@ -1,61 +1,61 @@
+ {
+-  "hash": "cada0461",
++  "hash": "f8be983a",
+   "configHash": "88db3699",
+-  "lockfileHash": "e296836e",
+-  "browserHash": "ce60aeab",
++  "lockfileHash": "c7303e54",
++  "browserHash": "bd7f3161",
+   "optimized": {
+     "react": {
+       "src": "../../react/index.js",
+       "file": "react.js",
+-      "fileHash": "d4335e5d",
++      "fileHash": "83fe9f91",
+       "needsInterop": true
+     },
+     "react-dom": {
+       "src": "../../react-dom/index.js",
+       "file": "react-dom.js",
+-      "fileHash": "f7fb7ca3",
++      "fileHash": "cd3534b0",
+       "needsInterop": true
+     },
+     "react/jsx-dev-runtime": {
+       "src": "../../react/jsx-dev-runtime.js",
+       "file": "react_jsx-dev-runtime.js",
+-      "fileHash": "3070f3cb",
++      "fileHash": "77992cd5",
+       "needsInterop": true
+     },
+     "react/jsx-runtime": {
+       "src": "../../react/jsx-runtime.js",
+       "file": "react_jsx-runtime.js",
+-      "fileHash": "57bea15b",
++      "fileHash": "9196bcac",
+       "needsInterop": true
+     },
+     "@supabase/supabase-js": {
+       "src": "../../@supabase/supabase-js/dist/module/index.js",
+       "file": "@supabase_supabase-js.js",
+-      "fileHash": "eddea0bb",
++      "fileHash": "fe2ba128",
+       "needsInterop": false
+     },
+     "date-fns": {
+       "src": "../../date-fns/esm/index.js",
+       "file": "date-fns.js",
+-      "fileHash": "67f9faeb",
++      "fileHash": "37957420",
+       "needsInterop": false
+     },
+     "openai": {
+       "src": "../../openai/index.mjs",
+       "file": "openai.js",
+-      "fileHash": "124bfb7f",
++      "fileHash": "de4e247e",
+       "needsInterop": false
+     },
+     "react-dom/client": {
+       "src": "../../react-dom/client.js",
+       "file": "react-dom_client.js",
+-      "fileHash": "5de71830",
++      "fileHash": "9bb75bfd",
+       "needsInterop": true
+     },
+     "react-router-dom": {
+       "src": "../../react-router-dom/dist/index.js",
+       "file": "react-router-dom.js",
+-      "fileHash": "c24406ba",
++      "fileHash": "d1befe81",
+       "needsInterop": false
+     }
+   },
+diff --git a/jobs-ai-final/jobs-ai-final/public/apple-touch-icon.png b/jobs-ai-final/public/apple-touch-icon.png
+similarity index 100%
+rename from jobs-ai-final/jobs-ai-final/public/apple-touch-icon.png
+rename to jobs-ai-final/public/apple-touch-icon.png
+diff --git a/jobs-ai-final/jobs-ai-final/public/favicon-108.png b/jobs-ai-final/public/favicon-108.png
+similarity index 100%
+rename from jobs-ai-final/jobs-ai-final/public/favicon-108.png
+rename to jobs-ai-final/public/favicon-108.png
+diff --git a/jobs-ai-final/jobs-ai-final/public/favicon-16x16.png b/jobs-ai-final/public/favicon-16x16.png
+similarity index 100%
+rename from jobs-ai-final/jobs-ai-final/public/favicon-16x16.png
+rename to jobs-ai-final/public/favicon-16x16.png
+diff --git a/jobs-ai-final/jobs-ai-final/public/favicon-32x32.png b/jobs-ai-final/public/favicon-32x32.png
+similarity index 100%
+rename from jobs-ai-final/jobs-ai-final/public/favicon-32x32.png
+rename to jobs-ai-final/public/favicon-32x32.png
+diff --git a/jobs-ai-final/jobs-ai-final/public/favicon-48x48.png b/jobs-ai-final/public/favicon-48x48.png
+similarity index 100%
+rename from jobs-ai-final/jobs-ai-final/public/favicon-48x48.png
+rename to jobs-ai-final/public/favicon-48x48.png
+diff --git a/jobs-ai-final/jobs-ai-final/public/favicon.ico b/jobs-ai-final/public/favicon.ico
+similarity index 100%
+rename from jobs-ai-final/jobs-ai-final/public/favicon.ico
+rename to jobs-ai-final/public/favicon.ico
+diff --git a/jobs-ai-final/jobs-ai-final/public/shvii-logo.png b/jobs-ai-final/public/shvii-logo.png
+similarity index 100%
+rename from jobs-ai-final/jobs-ai-final/public/shvii-logo.png
+rename to jobs-ai-final/public/shvii-logo.png
+diff --git a/jobs-ai-final/src/pages/Dashboard.tsx b/jobs-ai-final/src/pages/Dashboard.tsx
+index 90328d6..e1bc985 100644
+--- a/jobs-ai-final/src/pages/Dashboard.tsx
++++ b/jobs-ai-final/src/pages/Dashboard.tsx
+@@ -15,16 +15,16 @@ export default function Dashboard() {
+   };
+ 
+   return (
+-    <div className="min-h-screen bg-slate-900">
+-      <header className="border-b border-slate-800">
++    <div className="min-h-screen bg-white text-slate-900">
++      <header className="border-b border-gray-100">
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+           <div className="flex items-center space-x-2">
+             <Sparkles className="w-8 h-8 text-primary" />
+-            <span className="text-2xl font-bold text-white">Jobs.AI</span>
++            <span className="text-2xl font-bold">Shvii</span>
+           </div>
+           <button
+             onClick={handleLogout}
+-            className="flex items-center space-x-2 text-slate-300 hover:text-white"
++            className="flex items-center space-x-2 text-slate-600 hover:text-slate-900"
+           >
+             <LogOut className="w-5 h-5" />
+             <span>Logout</span>
+@@ -33,32 +33,32 @@ export default function Dashboard() {
+       </header>
+ 
+       <div className="flex">
+-        <aside className="w-64 border-r border-slate-800 min-h-screen p-6">
++        <aside className="w-64 border-r border-gray-100 min-h-screen p-6">
+           <nav className="space-y-2">
+             <Link
+               to="/dashboard"
+-              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white"
++              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-gray-50 hover:text-slate-900"
+             >
+               <Home className="w-5 h-5" />
+               <span>Dashboard</span>
+             </Link>
+             <Link
+               to="/dashboard/resume"
+-              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white"
++              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-gray-50 hover:text-slate-900"
+             >
+               <FileText className="w-5 h-5" />
+               <span>Resume Analyzer</span>
+             </Link>
+             <Link
+               to="/dashboard/cover-letter"
+-              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white"
++              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-gray-50 hover:text-slate-900"
+             >
+               <FileText className="w-5 h-5" />
+               <span>Cover Letters</span>
+             </Link>
+             <Link
+               to="/dashboard/applications"
+-              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white"
++              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-gray-50 hover:text-slate-900"
+             >
+               <Briefcase className="w-5 h-5" />
+               <span>Applications</span>
+diff --git a/jobs-ai-final/src/pages/LandingPage.tsx b/jobs-ai-final/src/pages/LandingPage.tsx
+index 1de52d1..1c699d6 100644
+--- a/jobs-ai-final/src/pages/LandingPage.tsx
++++ b/jobs-ai-final/src/pages/LandingPage.tsx
+@@ -16,20 +16,20 @@ export default function LandingPage() {
+     });
+   }, [navigate]);
+   return (
+-    <div className="min-h-screen bg-slate-900">
+-      <header className="border-b border-slate-800">
++    <div className="min-h-screen bg-white text-slate-900">
++      <header className="border-b border-gray-100">
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+           <div className="flex items-center space-x-2">
+             <Sparkles className="w-8 h-8 text-primary" />
+-            <span className="text-2xl font-bold text-white">Jobs.AI</span>
++            <span className="text-2xl font-bold">Shvii</span>
+           </div>
+           <div className="space-x-4">
+-            <Link to="/login" className="text-slate-300 hover:text-white">
++            <Link to="/login" className="text-slate-600 hover:text-slate-900">
+               Login
+             </Link>
+             <Link
+               to="/signup"
+-              className="bg-primary text-slate-900 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-500"
++              className="bg-primary text-white px-6 py-2 rounded-lg font-semibold hover:bg-primary-600"
+             >
+               Get Started
+             </Link>
+@@ -38,15 +38,15 @@ export default function LandingPage() {
+       </header>
+ 
+       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+-        <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
++        <h1 className="text-5xl md:text-6xl font-bold mb-6">
+           Land Your Dream Job with <span className="text-primary">AI</span>
+         </h1>
+-        <p className="text-xl text-slate-300 mb-8 max-w-3xl mx-auto">
++        <p className="text-xl text-slate-600 mb-8 max-w-3xl mx-auto">
+           Generate tailored cover letters, optimize your resume, and track applications—all powered by AI
+         </p>
+         <Link
+           to="/signup"
+-          className="inline-block bg-primary text-slate-900 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-yellow-500"
++          className="inline-block bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary-600"
+         >
+           Start Free Trial
+         </Link>
+@@ -54,33 +54,33 @@ export default function LandingPage() {
+ 
+       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+         <div className="grid md:grid-cols-3 gap-8">
+-          <div className="bg-slate-800 p-8 rounded-xl">
++          <div className="bg-white p-8 rounded-xl border border-gray-100">
+             <FileText className="w-12 h-12 text-primary mb-4" />
+-            <h3 className="text-xl font-bold text-white mb-2">AI Cover Letters</h3>
+-            <p className="text-slate-300">
++            <h3 className="text-xl font-bold mb-2">AI Cover Letters</h3>
++            <p className="text-slate-600">
+               Generate personalized cover letters in seconds, tailored to each job
+             </p>
+           </div>
+-          <div className="bg-slate-800 p-8 rounded-xl">
++          <div className="bg-white p-8 rounded-xl border border-gray-100">
+             <Target className="w-12 h-12 text-primary mb-4" />
+-            <h3 className="text-xl font-bold text-white mb-2">Resume Analysis</h3>
+-            <p className="text-slate-300">
++            <h3 className="text-xl font-bold mb-2">Resume Analysis</h3>
++            <p className="text-slate-600">
+               Get instant feedback on your resume with AI-powered insights
+             </p>
+           </div>
+-          <div className="bg-slate-800 p-8 rounded-xl">
++          <div className="bg-white p-8 rounded-xl border border-gray-100">
+             <TrendingUp className="w-12 h-12 text-primary mb-4" />
+-            <h3 className="text-xl font-bold text-white mb-2">Track Applications</h3>
+-            <p className="text-slate-300">
++            <h3 className="text-xl font-bold mb-2">Track Applications</h3>
++            <p className="text-slate-600">
+               Manage all your job applications in one organized dashboard
+             </p>
+           </div>
+         </div>
+       </section>
+ 
+-      <footer className="border-t border-slate-800 mt-20">
+-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-slate-400">
+-          <p>&copy; 2024 Jobs.AI. All rights reserved.</p>
++      <footer className="border-t border-gray-100 mt-20">
++        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-gray-600">
++          <p>&copy; 2024 Shvii. All rights reserved.</p>
+         </div>
+       </footer>
+     </div>
+diff --git a/jobs-ai-final/src/pages/Login.tsx b/jobs-ai-final/src/pages/Login.tsx
+index 3dc675a..bc44ff0 100644
+--- a/jobs-ai-final/src/pages/Login.tsx
++++ b/jobs-ai-final/src/pages/Login.tsx
+@@ -30,24 +30,24 @@ export default function Login() {
+   };
+ 
+   return (
+-    <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4">
++    <div className="min-h-screen bg-white flex items-center justify-center px-4 text-slate-900">
+       <div className="max-w-md w-full">
+         <div className="text-center mb-8">
+           <Link to="/" className="inline-flex items-center space-x-2">
+             <Sparkles className="w-10 h-10 text-primary" />
+-            <span className="text-3xl font-bold text-white">Jobs.AI</span>
++            <span className="text-3xl font-bold">Shvii</span>
+           </Link>
+-          <h2 className="mt-6 text-2xl font-bold text-white">Welcome back</h2>
++          <h2 className="mt-6 text-2xl font-bold">Welcome back</h2>
+         </div>
+ 
+-        <div className="bg-slate-800 p-8 rounded-xl">
++        <div className="bg-white p-8 rounded-xl border border-gray-100 shadow-sm">
+           <div className="mb-4">
+             <OAuthButton />
+           </div>
+           <div className="flex items-center gap-3 my-3">
+-            <div className="flex-1 h-[1px] bg-slate-700" />
+-            <div className="text-sm text-slate-400">or</div>
+-            <div className="flex-1 h-[1px] bg-slate-700" />
++            <div className="flex-1 h-[1px] bg-gray-200" />
++            <div className="text-sm text-gray-400">or</div>
++            <div className="flex-1 h-[1px] bg-gray-200" />
+           </div>
+           <form onSubmit={handleLogin} className="space-y-6">
+             {error && (
+@@ -64,7 +64,7 @@ export default function Login() {
+                 type="email"
+                 value={email}
+                 onChange={(e) => setEmail(e.target.value)}
+-                className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-primary"
++                className="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
+                 required
+               />
+             </div>
+@@ -77,7 +77,7 @@ export default function Login() {
+                 type="password"
+                 value={password}
+                 onChange={(e) => setPassword(e.target.value)}
+-                className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-primary"
++                className="w-full px-4 py-2 bg-white border border-gray-200 rounded-lg text-slate-900 focus:outline-none focus:border-primary"
+                 required
+               />
+             </div>
+@@ -85,13 +85,13 @@ export default function Login() {
+             <button
+               type="submit"
+               disabled={loading}
+-              className="w-full bg-primary text-slate-900 py-3 rounded-lg font-semibold hover:bg-yellow-500 disabled:opacity-50"
++                className="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-primary-600 disabled:opacity-50"
+             >
+               {loading ? 'Signing in...' : 'Sign in'}
+             </button>
+           </form>
+ 
+-          <p className="mt-6 text-center text-slate-400">
++          <p className="mt-6 text-center text-gray-600">
+             Don't have an account?{' '}
+             <Link to="/signup" className="text-primary hover:underline">
+               Sign up
+diff --git a/jobs-ai-final/tailwind.config.js b/jobs-ai-final/tailwind.config.js
+index f5f0068..524f302 100644
+--- a/jobs-ai-final/tailwind.config.js
++++ b/jobs-ai-final/tailwind.config.js
+@@ -7,7 +7,13 @@ export default {
+   theme: {
+     extend: {
+       colors: {
+-        primary: '#EAB308',
++        primary: {
++          DEFAULT: '#4F46E5',
++          600: '#4338CA'
++        },
++        muted: '#6B7280',
++        subtle: '#F8FAFC',
++        accent: '#FFB86B'
+       },
+     },
+   },
+-- 
+2.50.1
+

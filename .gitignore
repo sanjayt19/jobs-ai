@@ -2,3 +2,7 @@
 /jobs-ai-final/node_modules/
 /jobs-ai-final/dist/
 /jobs-ai-final/.env
+
+# Ignore transient Playwright/Vite diagnostic snapshots
+/jobs-ai-final/preview-screenshots/*.html
+/jobs-ai-final/preview-screenshots/diagnostics.json

@@ -78,7 +78,7 @@ export default function ApplicationTracker() {
         <h1 className="text-3xl font-bold text-white">Application Tracker</h1>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="flex items-center space-x-2 bg-primary text-slate-900 px-4 py-2 rounded-lg font-semibold hover:bg-yellow-500"
+          className="flex items-center space-x-2 bg-primary text-white px-4 py-2 rounded-lg font-semibold hover:bg-primary-600"
         >
           <Plus className="w-5 h-5" />
           <span>Add Application</span>
@@ -129,7 +129,7 @@ export default function ApplicationTracker() {
             <div className="flex space-x-4">
               <button
                 onClick={addApplication}
-                className="flex-1 bg-primary text-slate-900 py-2 rounded-lg font-semibold hover:bg-yellow-500"
+                className="flex-1 bg-primary text-white py-2 rounded-lg font-semibold hover:bg-primary-600"
               >
                 Add
               </button>

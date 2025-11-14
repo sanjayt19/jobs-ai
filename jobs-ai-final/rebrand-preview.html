@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Shvii — Rebrand color preview</title>
+  <style>
+    body{font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin:32px; background:#fff; color:#0f172a}
+    .wrap{max-width:980px;margin:0 auto}
+    h1{font-size:28px;margin-bottom:8px}
+    h2{font-size:18px;margin:18px 0 8px}
+    .palette{display:flex;gap:12px;margin:12px 0}
+    .sw{width:96px;height:96px;border-radius:8px;display:flex;align-items:flex-end;padding:8px;color:#fff;font-weight:700}
+    .sw-label{font-size:13px;text-align:center;margin-top:8px;color:#374151}
+    .example{border:1px solid #e6eef8;padding:18px;border-radius:8px;margin-top:12px;background:#fff}
+    .btn{display:inline-block;padding:10px 18px;border-radius:8px;font-weight:600;text-decoration:none}
+    .card{padding:14px;border-radius:10px;box-shadow:0 4px 10px rgba(2,6,23,0.06);margin-top:10px}
+    .row{display:flex;gap:18px;align-items:center}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Shvii — Rebrand preview</h1>
+    <p>Below are three color palette options. Each shows swatches and small UI examples (button, link, card). To view the changes in your local dev server run <code>npm run dev</code> then open <code>http://localhost:5173/rebrand-preview.html</code>.</p>
+
+    <h2>Option A — Warm Gold (recommended)</h2>
+    <div class="palette">
+      <div>
+        <div class="sw" style="background:#FFDD57;color:#111827">Primary<br>#FFDD57</div>
+        <div class="sw-label">Primary</div>
+      </div>
+      <div>
+        <div class="sw" style="background:#F2C94C;color:#111827">Primary-600<br>#F2C94C</div>
+        <div class="sw-label">Hover</div>
+      </div>
+      <div>
+        <div class="sw" style="background:#0F172A">Text<br>#0F172A</div>
+        <div class="sw-label">Text</div>
+      </div>
+      <div>
+        <div class="sw" style="background:#F1F5F9;color:#0f172a">Subtle<br>#F1F5F9</div>
+        <div class="sw-label">Subtle / BG</div>
+      </div>
+    </div>
+    <div class="example">
+      <div class="row">
+        <a class="btn" href="#" style="background:#FFDD57;color:#0f172a">Primary CTA</a>
+        <a class="btn" href="#" style="background:#ffffff;color:#0F172A;border:1px solid #E6E9EE">Ghost</a>
+        <a href="#" style="color:#FFDD57;font-weight:600">Link</a>
+      </div>
+      <div class="card" style="background:#fff;border:1px solid #F1F5F9">
+        <h3 style="margin:0;color:#0F172A">Card title</h3>
+        <p style="margin:8px 0 0;color:#5B6470">Muted paragraph text — example body copy for the warm gold theme.</p>
+      </div>
+    </div>
+
+    <h2>Option B — Calm Indigo</h2>
+    <div class="palette">
+      <div>
+        <div class="sw" style="background:#4F46E5">Primary<br>#4F46E5</div>
+        <div class="sw-label">Primary</div>
+      </div>
+      <div>
+        <div class="sw" style="background:#4338CA">Hover<br>#4338CA</div>
+        <div class="sw-label">Hover</div>
+      </div>
+      <div>
+        <div class="sw" style="background:#0F172A">Text<br>#0F172A</div>
+        <div class="sw-label">Text</div>
+      </div>
+      <div>
+        <div class="sw" style="background:#F8FAFC;color:#0f172a">Subtle<br>#F8FAFC</div>
+        <div class="sw-label">Subtle / BG</div>
+      </div>
+    </div>
+    <div class="example">
+      <div class="row">
+        <a class="btn" href="#" style="background:#4F46E5;color:white">Primary CTA</a>
+        <a class="btn" href="#" style="background:#ffffff;color:#4F46E5;border:1px solid #E9EEF9">Ghost</a>
+        <a href="#" style="color:#4F46E5;font-weight:600">Link</a>
+      </div>
+      <div class="card" style="background:#fff;border:1px solid #F8FAFC">
+        <h3 style="margin:0;color:#0F172A">Card title</h3>
+        <p style="margin:8px 0 0;color:#6B7280">Muted paragraph text — example body copy for the indigo theme.</p>
+      </div>
+    </div>
+
+    <h2>Option C — Fresh Teal</h2>
+    <div class="palette">
+      <div>
+        <div class="sw" style="background:#0ABAB5">Primary<br>#0ABAB5</div>
+        <div class="sw-label">Primary</div>
+      </div>
+      <div>
+        <div class="sw" style="background:#059E99">Hover<br>#059E99</div>
+        <div class="sw-label">Hover</div>
+      </div>
+      <div>
+        <div class="sw" style="background:#111827">Text<br>#111827</div>
+        <div class="sw-label">Text</div>
+      </div>
+      <div>
+        <div class="sw" style="background:#F6F9FA;color:#0f172a">Subtle<br>#F6F9FA</div>
+        <div class="sw-label">Subtle / BG</div>
+      </div>
+    </div>
+    <div class="example">
+      <div class="row">
+        <a class="btn" href="#" style="background:#0ABAB5;color:white">Primary CTA</a>
+        <a class="btn" href="#" style="background:#ffffff;color:#0ABAB5;border:1px solid #EAF7F6">Ghost</a>
+        <a href="#" style="color:#0ABAB5;font-weight:600">Link</a>
+      </div>
+      <div class="card" style="background:#fff;border:1px solid #F6F9FA">
+        <h3 style="margin:0;color:#111827">Card title</h3>
+        <p style="margin:8px 0 0;color:#6B7280">Muted paragraph text — example body copy for the teal theme.</p>
+      </div>
+    </div>
+
+    <h2>How to view</h2>
+    <ol>
+      <li>Locally: run <code>cd jobs-ai-final && npm run dev</code> and open <code>http://localhost:5173/rebrand-preview.html</code>.</li>
+      <li>PR / Preview: if Vercel is connected, the branch <code>feature/rebrand-shvii-clean</code> may have a preview deployment — open the PR and click the Vercel preview link.</li>
+      <li>If you want, I can also apply the chosen palette to the site and push updates directly to the PR branch.</li>
+    </ol>
+
+  </div>
+</body>
+</html>
