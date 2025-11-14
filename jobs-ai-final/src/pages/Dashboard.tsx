@@ -42,28 +42,20 @@ export default function Dashboard() {
             >
               <Home className="w-5 h-5" />
               <span>Dashboard</span>
-            <Link
-              to="/dashboard/applications"
-              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-
-gray-50 hover:text-slate-900"                                                                                 >
-              <Briefcase className="w-5 h-5" />
-              <span>Applications</span>
             </Link>
             <Link
-              to="/dashboard/profile"
-              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-
-gray-50 hover:text-slate-900"
+              to="/dashboard/resume-analyzer"
+              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-gray-50 hover:text-slate-900"
             >
-              <User className="w-5 h-5" />
-              <span>Profile</span>
-            </Link>
+              <FileText className="w-5 h-5" />
+              <span>Resume Analyzer</span>
             </Link>
             <Link
               to="/dashboard/cover-letter"
               className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-gray-50 hover:text-slate-900"
             >
-              <FileText className="w-5 h-5" />
-              <span>Cover Letters</span>
+              <Sparkles className="w-5 h-5" />
+              <span>Cover Letter</span>
             </Link>
             <Link
               to="/dashboard/applications"
@@ -71,6 +63,13 @@ gray-50 hover:text-slate-900"
             >
               <Briefcase className="w-5 h-5" />
               <span>Applications</span>
+            </Link>
+            <Link
+              to="/dashboard/profile"
+              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-gray-50 hover:text-slate-900"
+            >
+              <User className="w-5 h-5" />
+              <span>Profile</span>
             </Link>
           </nav>
         </aside>
@@ -78,10 +77,10 @@ gray-50 hover:text-slate-900"
         <main className="flex-1 p-8">
           <Routes>
             <Route path="/" element={<DashboardHome />} />
-            <Route path="/resume" element={<ResumeAnalyzer />} />
-            <Route path="/cover-letter" element={<CoverLetterGenerator />} />
-            <Route path="/applications" element={<ApplicationTracker />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="resume-analyzer" element={<ResumeAnalyzer />} />
+            <Route path="cover-letter" element={<CoverLetterGenerator />} />
+            <Route path="applications" element={<ApplicationTracker />} />
+            <Route path="profile" element={<Profile />} />
           </Routes>
         </main>
       </div>
